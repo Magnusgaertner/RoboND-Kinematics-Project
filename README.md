@@ -65,8 +65,7 @@ In addition, you can also control the spawn location of the target object in the
 
 You can launch the project by
 ```sh
-$ cd ~/catkin_ws/src/RoboND-Kinematics-Project/kuka_arm/scripts
-$ ./safe_spawner.sh
+$ ./stomp_setup.sh
 ```
 
 If you are running in demo mode, this is all you need. To run your own Inverse Kinematics code change the **demo** flag described above to _"false"_ and run your code (once the project has successfully loaded) by:

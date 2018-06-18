@@ -1,0 +1,5 @@
+- git:
+    local-name: industrial_moveit
+    uri: git@github.com:Magnusgaertner/industrial_moveit.git
+
+
