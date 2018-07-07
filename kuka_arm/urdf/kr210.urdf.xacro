@@ -266,6 +266,47 @@
     </collision>
   </link>
 
+ <joint name="kinect_joint_optical_frame" type="fixed">
+
+      <origin xyz="0 0 0" rpy="-1.58 0 -1.58"/>
+      <parent link="kinect_link"/>
+      <child link="kinect_link_optical_frame"/>
+    </joint>
+
+    <link name="kinect_link_optical_frame"/>
+
+   <joint name="kinect_joint" type="fixed">
+      <axis xyz="0 1 0" />
+      <origin xyz="0 0 0.3" rpy="0 0 0"/>
+      <parent link="link_4"/>
+      <child link="kinect_link"/>
+    </joint>
+
+    <!-- kinect camera -->
+    <link name="kinect_link">
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+      <box size="0.1 0.1 0.1"/>
+        </geometry>
+      </collision>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+              <box size="0.1 0.1 0.1"/>
+        </geometry>
+      </visual>
+
+      <inertial>
+        <mass value="1e-5" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+      </inertial>
+    </link>
+
+
+
   <joint name="right_gripper_finger_joint" type="prismatic">
     <origin rpy="0 0 0" xyz="0.15 -0.0725 0" />
     <parent link="gripper_link" />
