@@ -20,7 +20,7 @@ find_package(catkin REQUIRED
 		roscpp
 		roslint
 		rospy
-	)
+			)
 find_package(Eigen3 REQUIRED)
 
 
