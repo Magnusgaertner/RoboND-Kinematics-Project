@@ -44,7 +44,7 @@
     <env name="DISPLAY" value="$(optenv DISPLAY :0)" />
 
 
-<param name="collision_detector" value="Tsdf"/>
+<param name="collision_detector" value="my_checker"/>
 <param name="wait_at_start" value="false"/>
 
     <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
