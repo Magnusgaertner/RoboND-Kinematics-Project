@@ -11,12 +11,11 @@
  * All Rights Reserved.
  ******************************************************************************/
 
-// Author: Harsh Pandya
+// Author: Harsh Pandya, Magnus Gärtner
 
 #include <kuka_arm/stomp_trajectory_sampler.h>
 #include <moveit/collision_detection_fcl/collision_detector_allocator_fcl.h>
 
-//#include <industrial_collision_detection/industrial_collision_detection_plugin.h>
 #include "moveit/collision_plugin_loader/collision_plugin_loader.h"
 
 void setStartStateToCurrentStateStomp(moveit::planning_interface::MoveGroupInterface &move_group) {
@@ -53,11 +52,6 @@ StompTrajectorySampler::StompTrajectorySampler(ros::NodeHandle nh)
   planning_scene::PlanningScene& planning_scene = *planning_scene_ptr;
   robot_state::RobotState robot_kinematic_state(kinematic_model);
 
-  //collision_detection::CollisionPluginLoader pluginLoader;
-  //pluginLoader.setupScene(nh, planning_scene_ptr);
-  //pluginLoader.activate("bla",planning_scene_ptr, true);
-
-  //planning_scene_ptr->addCollisionDetector(collision_detection::CollisionDetectorAllocatorFCL::create());
   // set Stom as the planner and set allowed planning time
   move_group.setPlannerId("STOMP");
   move_group.setPlanningTime(10.0);
@@ -72,7 +66,92 @@ StompTrajectorySampler::StompTrajectorySampler(ros::NodeHandle nh)
   gripper_joint_model_group =
       eef_group.getCurrentState()->getJointModelGroup(GRIPPER_GROUP);
 
-  /*
+  //addCollisionObjects();
+
+  while (ros::ok()) {
+
+    moveit_visual_tools::MoveItVisualTools visual_tools("world");
+    visual_tools.deleteAllMarkers();
+    visual_tools.loadRemoteControl();
+
+
+    Eigen::Affine3d text_pose = Eigen::Affine3d::Identity();
+    Eigen::Affine3d instr_pose = Eigen::Affine3d::Identity();
+    text_pose.translation().z() = 4.0;
+    instr_pose.translation().z() = 3.5;
+    visual_tools.publishText(text_pose, "Welcome to tsdf integration moveit",
+                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
+    visual_tools.trigger();
+    visual_tools.prompt("next step");
+
+
+    float target_x, target_y, target_z;
+    float bin_x, bin_y, bin_z;
+
+    ros::param::get("/target_spawn_location/x", target_x);
+    ros::param::get("/target_spawn_location/y", target_y);
+    ros::param::get("/target_spawn_location/z", target_z);
+
+    ros::param::get("/target_drop_location/x", bin_x);
+    ros::param::get("/target_drop_location/y", bin_y);
+    ros::param::get("/target_drop_location/z", bin_z);
+
+    geometry_msgs::Pose target_pose, bin_pose, target_reach;
+    target_pose.orientation.w = 1.0;
+    target_pose.position.x = target_x - 0.4;
+    target_pose.position.y = target_y;
+    target_pose.position.z = target_z - 0.1;
+
+    target_reach.orientation.w = 1.0;
+    target_reach.position.x = target_x - 0.2;
+    target_reach.position.y = target_y;
+    target_reach.position.z = target_z - 0.1;
+
+    bin_pose.orientation.w = 1.0;
+    bin_pose.position.x = bin_x - 0.1;
+    bin_pose.position.y = bin_y;
+    bin_pose.position.z = bin_z + 1.6;
+
+
+    setStartStateToCurrentStateStomp(move_group);
+    setPoseTargetStomp(move_group, target_pose);
+
+    move_group.setMaxVelocityScalingFactor(0.2);
+    eef_group.setMaxVelocityScalingFactor(1.0);
+
+    // define plan object which will hold the planned trajectory
+    moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+    bool success = move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS;
+    ROS_INFO("Visualizing plan to target: %s",
+             success ? "SUCCEEDED" : "FAILED");
+
+    visualize_plan(visual_tools, text_pose, target_pose, my_plan);
+    visual_tools.trigger();
+    visual_tools.prompt("next step");
+
+    success = move_group.execute(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS;
+    ROS_INFO("Moving to pick location: %s",
+             success ? "SUCCEEDED" : "FAILED");
+
+    setStartStateToCurrentStateStomp(move_group);
+    setPoseTargetStomp(move_group, target_reach);
+
+    success = move_group.move() == moveit::planning_interface::MoveItErrorCode::SUCCESS;
+    ROS_INFO("Target reach: %s",
+             success ? "SUCCEEDED" : "FAILED");
+  }
+}
+
+void StompTrajectorySampler::visualize_plan(moveit_visual_tools::MoveItVisualTools &visual_tools,
+                                            const Eigen::Affine3d &text_pose, const geometry_msgs::Pose &target_pose,
+                                            const moveit::planning_interface::MoveGroupInterface::Plan &my_plan) const {// Visualize the plan
+  visual_tools.publishAxisLabeled(target_pose, "target_pose");
+  visual_tools.publishText(text_pose, "Displaying plan to target location",
+                           rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
+  visual_tools.publishTrajectoryLine(my_plan.trajectory_, joint_model_group);
+}
+
+void StompTrajectorySampler::addCollisionObjects() {/*
    * Collision Objects:
    * Create an object list and populate it with shelf and bin objects
    * Then insert objects in scene for collision avoidance and interaction
@@ -133,261 +212,6 @@ StompTrajectorySampler::StompTrajectorySampler(ros::NodeHandle nh)
 
   // Allow MoveGroup to add the collision objects in the world
   ros::Duration(1.0).sleep();
-
-  while (ros::ok()) {
-    /*
-     * rviz visualization:
-     * Setup MoveItVisualTools for visualizing collision objects, robot,
-     * and trajectories in Rviz
-     */
-    moveit_visual_tools::MoveItVisualTools visual_tools("world");
-    visual_tools.deleteAllMarkers();
-
-    // Load RemoteControl for step-by-step progression
-    visual_tools.loadRemoteControl();
-
-    // Create text marker for displaying current state
-    Eigen::Affine3d text_pose = Eigen::Affine3d::Identity();
-    Eigen::Affine3d instr_pose = Eigen::Affine3d::Identity();
-    text_pose.translation().z() = 4.0;
-    instr_pose.translation().z() = 3.5;
-    visual_tools.publishText(text_pose, "Welcome to tsdf integration moveit",
-                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
-    // visual_tools.publishText(instr_pose, "Press 'Next' to continue...",
-    // rviz_visual_tools::GREEN, rviz_visual_tools::XXXLARGE);
-
-    // Publish messages to rviz
-    visual_tools.trigger();
-    visual_tools.prompt("next step");
-
-
-    /*
-     * Get Pick and Drop location from param server
-     * Plan motion to pick location
-     */
-    float target_x, target_y, target_z;
-    float bin_x, bin_y, bin_z;
-
-    ros::param::get("/target_spawn_location/x", target_x);
-    ros::param::get("/target_spawn_location/y", target_y);
-    ros::param::get("/target_spawn_location/z", target_z);
-
-    ros::param::get("/target_drop_location/x", bin_x);
-    ros::param::get("/target_drop_location/y", bin_y);
-    ros::param::get("/target_drop_location/z", bin_z);
-
-    geometry_msgs::Pose target_pose, bin_pose, target_reach;
-    target_pose.orientation.w = 1.0;
-    target_pose.position.x = target_x - 0.4;
-    target_pose.position.y = target_y;
-    target_pose.position.z = target_z - 0.1;
-
-    target_reach.orientation.w = 1.0;
-    target_reach.position.x = target_x - 0.2;
-    target_reach.position.y = target_y;
-    target_reach.position.z = target_z - 0.1;
-
-    bin_pose.orientation.w = 1.0;
-    bin_pose.position.x = bin_x - 0.1;
-    bin_pose.position.y = bin_y;
-    bin_pose.position.z = bin_z + 1.6;
-
-    // set starting pose
-    setStartStateToCurrentStateStomp(move_group);
-    //move_group.setStartStateToCurrentState();
-
-    // set target pose
-    setPoseTargetStomp(move_group, target_pose);
-    //move_group.setPoseTarget(target_pose);
-
-    // slow down movement of the robot
-    move_group.setMaxVelocityScalingFactor(0.2);
-    eef_group.setMaxVelocityScalingFactor(1.0);
-
-    // define plan object which will hold the planned trajectory
-    moveit::planning_interface::MoveGroupInterface::Plan my_plan;
-
-    bool success = move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS;
-    ROS_INFO("Visualizing plan to target: %s",
-             success ? "SUCCEEDED" : "FAILED");
-
-    // Visualize the plan
-    visual_tools.publishAxisLabeled(target_pose, "target_pose");
-    visual_tools.publishText(text_pose, "Displaying plan to target location",
-                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
-    visual_tools.publishTrajectoryLine(my_plan.trajectory_, joint_model_group);
-    visual_tools.trigger();
-    visual_tools.prompt("next step");
-
-    /*
-     * Convert plan to a set of eef poses for IK calculation
-     */
-    robot_trajectory::RobotTrajectoryPtr robot_trajectory(
-        new robot_trajectory::RobotTrajectory(kinematic_model,
-                                              joint_model_group->getName()));
-
-    // RobotState contains the current position/velocity/acceleration data
-    moveit::core::RobotStatePtr robot_current_state;
-    std::vector<double> robot_joint_positions;
-
-    // Vector to hold eef poses
-    std::vector<geometry_msgs::Pose> path;
-    std::size_t path_size;
-
-    // Declare service client for IK
-    ros::ServiceClient client =
-        nh.serviceClient<kuka_arm::CalculateIK>("calculate_ik");
-    kuka_arm::CalculateIK srv;
-
-    // Display current state
-    visual_tools.publishText(text_pose, "Moving to the target location",
-                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
-    visual_tools.trigger();
-    // command the robot to execute the created plan
-    success = move_group.execute(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS;
-    ROS_INFO("Moving to pick location: %s",
-             success ? "SUCCEEDED" : "FAILED");
-
-
-    // Display current state
-    visual_tools.publishText(text_pose, "Reached target location",
-                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
-    visual_tools.trigger();
-    visual_tools.prompt("next step");
-
-    /*
-     * Approach the target
-     *
-     */
-    // Display current state
-    visual_tools.publishText(text_pose, "Executing reaching movement",
-                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
-    visual_tools.trigger();
-
-    setStartStateToCurrentStateStomp(move_group);
-    //move_group.setStartStateToCurrentState();
-
-    setPoseTargetStomp(move_group, target_reach);
-    //move_group.setPoseTarget(target_reach);
-
-    success = move_group.move() == moveit::planning_interface::MoveItErrorCode::SUCCESS;
-    ROS_INFO("Target reach: %s",
-             success ? "SUCCEEDED" : "FAILED");
-
-    visual_tools.prompt("next step");
-
-    /*
-     * Grasp the target
-     */
-    // Display current state
-    visual_tools.publishText(text_pose, "Grasping target object",
-                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
-    visual_tools.trigger();
-    CloseGripper();
-    ros::Duration(5.0).sleep();
-    visual_tools.prompt("next step");
-
-    /*
-     * Retract the gripper
-     *
-     */
-    // Display current state
-    visual_tools.publishText(text_pose, "Retrieving target object",
-                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
-    visual_tools.trigger();
-    setStartStateToCurrentStateStomp(move_group);
-    //move_group.setStartStateToCurrentState();
-    setPoseTargetStomp(move_group, target_pose);
-    //move_group.setPoseTarget(target_pose);
-    success = move_group.move() == moveit::planning_interface::MoveItErrorCode::SUCCESS;
-    ROS_INFO("Target retrieval: %s",
-             success ? "SUCCEEDED" : "FAILED");
-
-    visual_tools.prompt("next step");
-
-    /*
-     * Plan to bin location for drop-off
-     */
-
-    setStartStateToCurrentStateStomp(move_group);
-    setPoseTargetStomp(move_group, bin_pose);
-
-    success = move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS;
-    ROS_INFO("Visualizing plan to drop location: %s",
-             success ? "SUCCEEDED" : "FAILED");
-
-    // Visualize the plan
-    visual_tools.publishAxisLabeled(bin_pose, "drop_pose");
-    visual_tools.publishText(text_pose, "Displaying plan to drop-off location",
-                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
-    visual_tools.publishTrajectoryLine(my_plan.trajectory_, joint_model_group);
-    visual_tools.trigger();
-    visual_tools.prompt("next step");
-
-    // Display current state
-    visual_tools.publishText(text_pose, "Moving to the drop-off location",
-                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
-    visual_tools.trigger();
-    // command the robot to execute the created plan
-    success = move_group.execute(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS;
-    ROS_INFO("Moving to drop location: %s",
-             success ? "SUCCEEDED" : "FAILED");
-
-    ROS_INFO("Moving to drop location: %s",
-             success ? "SUCCEEDED" : "FAILED");
-
-    // Display current state
-    visual_tools.publishText(text_pose, "Reached drop-off location",
-                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
-    visual_tools.trigger();
-    visual_tools.prompt("next step");
-
-    // Open the gripper and release the object
-    // Display current state
-    visual_tools.publishText(text_pose, "Releasing target object",
-                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
-    visual_tools.trigger();
-    OpenGripper();
-    ros::Duration(3.0).sleep();
-
-    // Update cycle cycle_counter
-    cycle_counter++;
-
-    // Display current state
-    visual_tools.publishText(text_pose, "  End of Pick-Place cycle\nPress Next to begin a new cycle",
-                             rviz_visual_tools::WHITE, rviz_visual_tools::XXXXLARGE);
-    visual_tools.trigger();
-    visual_tools.prompt("next step");
-
-    // Move robot back to idle pose
-    robot_current_state = move_group.getCurrentState();
-
-    // Next get the current set of joint values for the group.
-    robot_joint_positions.clear();
-    robot_current_state->copyJointGroupPositions(joint_model_group,
-                                                 robot_joint_positions);
-
-    for (std::size_t j = 0; j < robot_joint_positions.size(); ++j) {
-      robot_joint_positions[j] = 0;  // radians
-    }
-
-    move_group.setJointValueTarget(robot_joint_positions);
-    success = move_group.move() == moveit::planning_interface::MoveItErrorCode::SUCCESS;
-    ROS_INFO("Robot motion to Idle state: %s", success ? "SUCCEEDED" : "FAILED");
-
-    // Spawn another target
-    system("rosrun kuka_arm target_spawn.py");
-    ros::Duration(1.0).sleep();
-
-    float spawn_x, spawn_y, spawn_z;
-    std::stringstream td_sstream;
-    nh.getParam("/target_description_argument", target_description_param);
-
-    td_sstream << "rosrun gazebo_ros spawn_model "
-               << target_description_param << cycle_counter;
-
-    system(td_sstream.str().c_str());
-  }
 }
 
 bool StompTrajectorySampler::OperateGripper(const bool &close_gripper) {

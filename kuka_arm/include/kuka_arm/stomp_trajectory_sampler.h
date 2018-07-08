@@ -75,6 +75,12 @@ private:
                             const std::string &mesh_path,
                             const geometry_msgs::Pose &object_pose,
                             moveit_msgs::CollisionObject &collision_object);
+
+  void addCollisionObjects();
+
+  void visualize_plan(moveit_visual_tools::MoveItVisualTools &visual_tools, const Eigen::Affine3d &text_pose,
+                      const geometry_msgs::Pose &target_pose,
+                      const moveit::planning_interface::MoveGroupInterface::Plan &my_plan) const;
 };
 
 #endif  // KUKA_ARM_TRAJECTORY_SAMPLER_H
