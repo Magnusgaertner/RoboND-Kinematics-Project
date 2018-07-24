@@ -1,0 +1,104 @@
+<launch>
+    <rosparam command="load" file="$(find kr210_claw_moveit)/params/kr210.yaml"/>
+    <include file="$(find kr210_claw_moveit)/launch/planning_context.launch"/>
+
+    <!-- GDB Debug Option -->
+    <arg name="debug" default="false"/>
+    <arg unless="$(arg debug)" name="launch_prefix" value=""/>
+    <arg if="$(arg debug)" name="launch_prefix"
+         value="gdb -x $(find kr210_claw_moveit)/launch/gdb_settings.gdb --ex run --args"/>
+
+    <!-- Verbose Mode Option -->
+    <arg name="info" default="$(arg debug)"/>
+    <arg unless="$(arg info)" name="command_args" value=""/>
+    <arg if="$(arg info)" name="command_args" value="--debug"/>
+
+    <!-- move_group settings -->
+    <arg name="allow_trajectory_execution" default="true"/>
+    <arg name="fake_execution" default="true"/>
+    <arg name="max_safe_path_cost" default="1"/>
+    <arg name="jiggle_fraction" default="0.05"/>
+    <arg name="publish_monitored_planning_scene" default="true"/>
+    <arg name="planner" default="stomp"/>
+
+    <!-- Planning Functionality -->
+    <include ns="move_group" file="$(find kr210_claw_moveit)/launch/planning_pipeline.launch.xml">
+        <arg name="pipeline" value="$(arg planner)"/>
+    </include>
+
+    <!-- Trajectory Execution Functionality -->
+    <include ns="move_group" file="$(find kr210_claw_moveit)/launch/trajectory_execution.launch.xml"
+             if="$(arg allow_trajectory_execution)">
+        <arg name="moveit_manage_controllers" value="true"/>
+        <arg name="moveit_controller_manager" value="kuka_arm" unless="$(arg fake_execution)"/>
+        <arg name="moveit_controller_manager" value="fake" if="$(arg fake_execution)"/>
+    </include>
+
+    <!-- Sensors Functionality -->
+    <include ns="move_group" file="$(find kr210_claw_moveit)/launch/sensor_manager.launch.xml"
+             if="$(arg allow_trajectory_execution)">
+        <arg name="moveit_sensor_manager" value="kuka_arm"/>
+    </include>
+
+    <!-- Start the actual move_group node/action server -->
+    <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_move_group" type="move_group"
+          respawn="false" output="screen" args="joint_states:=/kuka_arm/joint_states $(arg command_args)">
+        <!-- Set the display variable, in case OpenGL code is used internally -->
+        <env name="DISPLAY" value="$(optenv DISPLAY :0)"/>
+
+
+        <param name="collision_detector" value="my_checker"/>
+        <remap from="/move_group/esdf_map_in" to="/voxblox_node/esdf_map_out"/>
+        <param name="tsdf_voxel_size" value="0.04" />
+        <param name="tsdf_voxels_per_side" value="16" />
+        <param name="voxel_carving_enabled" value="true" />
+        <param name="color_mode" value="lambert" />
+        <param name="publish_tsdf_map" value="true" />
+        <param name="publish_esdf_map" value="true" />
+        <param name="publish_tsdf_info" value="true" />
+        <param name="use_tf_transforms" value="true" />
+        <param name="update_mesh_every_n_sec" value="10" />
+        <param name="min_time_between_msgs_sec" value="0" />
+        <param name="max_block_distance_from_body" value="3.0" />
+        <param name="max_integration_time_s" value="1" />
+        <param name="max_ray_length_m" value="3.0" />
+        <param name="method" value="fast" />
+        <param name="use_const_weight" value="false" />
+        <param name="allow_clear" value="true" />
+        <param name="verbose" value="true" />
+        <!--remap from="transform" to="/kinect/vrpn_client/estimated_transform" /-->
+        <!--rosparam file="$(find voxblox_ros)/cfg/cow_and_lady.yaml"/-->
+        <param name="mesh_filename" value="$(find voxblox_ros)/mesh_results/$(anon argo).ply" />
+
+
+        <param name="wait_at_start" value="false"/>
+
+        <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
+        <param name="max_safe_path_cost" value="$(arg max_safe_path_cost)"/>
+        <param name="jiggle_fraction" value="$(arg jiggle_fraction)"/>
+
+        <!-- load these non-default MoveGroup capabilities -->
+        <!--
+        <param name="capabilities" value="
+                      a_package/AwsomeMotionPlanningCapability
+                      another_package/GraspPlanningPipeline
+                      " />
+        -->
+
+        <!-- inhibit these default MoveGroup capabilities -->
+        <!--
+        <param name="disable_capabilities" value="
+                      move_group/MoveGroupKinematicsService
+                      move_group/ClearOctomapService
+                      " />
+        -->
+
+        <!-- Publish the planning scene of the physical robot so that rviz plugin can know actual robot -->
+        <param name="planning_scene_monitor/publish_planning_scene" value="$(arg publish_monitored_planning_scene)"/>
+        <param name="planning_scene_monitor/publish_geometry_updates" value="$(arg publish_monitored_planning_scene)"/>
+        <param name="planning_scene_monitor/publish_state_updates" value="$(arg publish_monitored_planning_scene)"/>
+        <param name="planning_scene_monitor/publish_transforms_updates"
+               value="$(arg publish_monitored_planning_scene)"/>
+    </node>
+
+</launch>

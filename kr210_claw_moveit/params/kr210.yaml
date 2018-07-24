@@ -1,0 +1,495 @@
+use_sim_time: true
+camera:
+  imager_rate: 2.0
+  rgb:
+    image_raw:
+      compressed: {format: jpeg, jpeg_quality: 80, png_level: 9}
+      compressedDepth: {depth_max: 10.0, depth_quantization: 100.0, png_level: 9}
+      theora: {keyframe_frequency: 64, optimize_for: 1, quality: 31, target_bitrate: 800000}
+gazebo: {auto_disable_bodies: false, cfm: 0.0, contact_max_correcting_vel: 100.0,
+  contact_surface_layer: 0.001, erp: 0.2, gravity_x: 0.0, gravity_y: 0.0, gravity_z: -9.8,
+  max_contacts: 20, max_update_rate: 100.0, sor_pgs_iters: 50, sor_pgs_precon_iters: 0,
+  sor_pgs_rms_error_tol: 0.0, sor_pgs_w: 1.3, time_step: 0.001}
+kuka_arm:
+  arm_controller:
+    action_monitor_rate: 30
+    constraints: {goal_time: 10.0}
+    gains:
+      joint_1: {d: 1, i: 0.01, p: 100}
+      joint_2: {d: 1, i: 0.01, p: 100}
+      joint_3: {d: 1, i: 0.01, p: 100}
+      joint_4: {d: 1, i: 0.01, p: 100}
+      joint_5: {d: 1, i: 0.01, p: 100}
+      joint_6: {d: 1, i: 0.01, p: 100}
+    joints: [joint_1, joint_2, joint_3, joint_4, joint_5, joint_6]
+    state_publish_rate: 50
+    stop_trajectory_duration: 0
+    type: position_controllers/JointTrajectoryController
+  gripper_controller:
+    constraints:
+      goal_time: 3.0
+      left_gripper_finger_joint: {goal: 0.02}
+      right_gripper_finger_joint: {goal: 0.02}
+    gains:
+      left_gripper_finger_joint: {antiwindup: false, d: 10.0, i: 1.0, i_clamp: 1.0,
+        i_clamp_max: 1.0, i_clamp_min: -1.0, p: 100.0}
+      right_gripper_finger_joint: {antiwindup: false, d: 10.0, i: 1.0, i_clamp: 1.0,
+        i_clamp_max: 1.0, i_clamp_min: -1.0, p: 100.0}
+    joints: [right_gripper_finger_joint, left_gripper_finger_joint]
+    type: effort_controllers/JointTrajectoryController
+  joint_state_controller: {publish_rate: 50, type: joint_state_controller/JointStateController}
+move_group:
+  allow_clear: true
+  allow_trajectory_execution: true
+  collision_detector: my_checker
+  color_mode: lambert
+  controller_list:
+  - action_ns: follow_joint_trajectory
+    default: true
+    joints: [joint_1, joint_2, joint_3, joint_4, joint_5, joint_6]
+    name: kuka_arm/arm_controller
+    type: FollowJointTrajectory
+  - action_ns: follow_joint_trajectory
+    default: true
+    joints: [right_gripper_finger_joint, left_gripper_finger_joint]
+    name: kuka_arm/gripper_controller
+    type: FollowJointTrajectory
+  jiggle_fraction: 0.05
+  max_block_distance_from_body: 3.0
+  max_integration_time_s: 1
+  max_range: 5.0
+  max_ray_length_m: 3.0
+  max_safe_path_cost: 1
+  mesh_filename: /home/magnus/kr210_ws/src/voxblox/voxblox_ros/mesh_results/argo_loki_desktop_25058_9172504511269135251.ply
+  method: fast
+  min_time_between_msgs_sec: 0
+  moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
+  moveit_manage_controllers: true
+  octomap_resolution: 0.025
+  planning_plugin: stomp_moveit/StompPlannerManager
+  planning_scene_monitor: {publish_geometry_updates: true, publish_planning_scene: true,
+    publish_state_updates: true, publish_transforms_updates: true}
+  publish_esdf_map: true
+  publish_tsdf_info: true
+  publish_tsdf_map: true
+  request_adapters: default_planner_request_adapters/FixWorkspaceBounds                                        default_planner_request_adapters/FixStartStateBounds                                        default_planner_request_adapters/FixStartStateCollision                                        default_planner_request_adapters/FixStartStatePathConstraints
+  start_state_max_bounds_error: 0.1
+  stomp:
+    arm_group:
+      group_name: arm_group
+      optimization: {control_cost_weight: 0.0, initialization_method: 1, max_rollouts: 100,
+        num_iterations: 50, num_iterations_after_valid: 0, num_rollouts: 10, num_timesteps: 50}
+      task:
+        cost_functions:
+        - {class: stomp_moveit/CollisionCheck, collision_penalty: 1.0, cost_weight: 1.0,
+          kernel_window_percentage: 0.2, longest_valid_joint_move: 0.05}
+        - {class: stomp_moveit/ObstacleDistanceGradient, cost_weight: 1.0, longest_valid_joint_move: 0.05,
+          max_distance: 0.2}
+        noise_generator:
+        - class: stomp_moveit/NormalDistributionSampling
+          stddev: [0.1, 1.0, 1.0, 0.4, 0.3, 0.3]
+        noisy_filters:
+        - {class: stomp_moveit/JointLimits, lock_goal: true, lock_start: true}
+        - class: stomp_moveit/MultiTrajectoryVisualization
+          line_width: 0.02
+          marker_array_topic: stomp_trajectories
+          marker_namespace: noisy
+          rgb: [0, 255, 0]
+        update_filters:
+        - {class: stomp_moveit/PolynomialSmoother, poly_order: 5}
+        - class: stomp_moveit/TrajectoryVisualization
+          error_rgb: [255, 0, 0]
+          line_width: 0.02
+          marker_namespace: optimized
+          marker_topic: stomp_trajectory
+          publish_intermediate: true
+          rgb: [191, 0, 255]
+    gripper_group:
+      group_name: gripper_group
+      optimization: {control_cost_weight: 0.0, initialization_method: 1, max_rollouts: 100,
+        num_iterations: 50, num_iterations_after_valid: 0, num_rollouts: 10, num_timesteps: 50}
+      task:
+        cost_functions:
+        - {class: stomp_moveit/CollisionCheck, collision_penalty: 1.0, cost_weight: 1.0,
+          kernel_window_percentage: 0.2, longest_valid_joint_move: 0.05}
+        noise_generator:
+        - class: stomp_moveit/NormalDistributionSampling
+          stddev: [0.1, 0.1]
+        noisy_filters:
+        - {class: stomp_moveit/JointLimits, lock_goal: true, lock_start: true}
+        - class: stomp_moveit/MultiTrajectoryVisualization
+          line_width: 0.02
+          marker_array_topic: stomp_trajectories
+          marker_namespace: noisy
+          rgb: [0, 255, 0]
+        update_filters:
+        - {class: stomp_moveit/PolynomialSmoother, poly_order: 5}
+        - class: stomp_moveit/TrajectoryVisualization
+          error_rgb: [255, 0, 0]
+          line_width: 0.02
+          marker_namespace: optimized
+          marker_topic: stomp_trajectory
+          publish_intermediate: true
+          rgb: [191, 0, 255]
+  trajectory_execution: {allowed_execution_duration_scaling: 5.0, allowed_goal_duration_margin: 1.0,
+    allowed_start_tolerance: 0.01}
+  tsdf_voxel_size: 0.04
+  tsdf_voxels_per_side: 16
+  update_mesh_every_n_sec: 10
+  use_const_weight: false
+  use_tf_transforms: true
+  verbose: true
+  voxel_carving_enabled: true
+  wait_at_start: false
+robot_description: "<?xml version=\"1.0\" ?>\n<!-- ===================================================================================\
+  \ -->\n<!-- |    This document was autogenerated by xacro from /home/magnus/kr210_ws/src/RoboND-Kinematics-Project/kuka_arm/urdf/kr210.urdf.xacro\
+  \ | -->\n<!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                \
+  \                 | -->\n<!-- ===================================================================================\
+  \ -->\n<robot name=\"kuka_arm\" xmlns:xacro=\"http://www.ros.org/wiki/xacro\">\n\
+  \  <!-- Link0 -->\n  <gazebo reference=\"base_link\">\n    <material>Gazebo/Grey</material>\n\
+  \    <mu1>2</mu1>\n    <mu2>2</mu2>\n  </gazebo>\n  <!-- Link1 -->\n  <gazebo reference=\"\
+  link_1\">\n    <mu1>0.2</mu1>\n    <mu2>0.2</mu2>\n  </gazebo>\n  <!-- Link2 -->\n\
+  \  <gazebo reference=\"link_2\">\n    <mu1>0.2</mu1>\n    <mu2>0.2</mu2>\n  </gazebo>\n\
+  \  <!-- Link3 -->\n  <gazebo reference=\"link_3\">\n    <mu1>0.2</mu1>\n    <mu2>0.2</mu2>\n\
+  \  </gazebo>\n  <!-- Link4 -->\n  <gazebo reference=\"link_4\">\n    <mu1>0.2</mu1>\n\
+  \    <mu2>0.2</mu2>\n  </gazebo>\n  <!-- Link5 -->\n  <gazebo reference=\"link_5\"\
+  >\n    <mu1>0.2</mu1>\n    <mu2>0.2</mu2>\n  </gazebo>\n  <!-- Link6 -->\n  <gazebo\
+  \ reference=\"link_6\">\n    <mu1>0.2</mu1>\n    <mu2>0.2</mu2>\n  </gazebo>\n \
+  \ <!-- Gripper -->\n  <gazebo reference=\"gripper_link\">\n    <material>Gazebo/Grey</material>\n\
+  \    <mu1>0.2</mu1>\n    <mu2>0.2</mu2>\n  </gazebo>\n  <gazebo reference=\"left_gripper_finger_link\"\
+  >\n    <material>Gazebo/Grey</material>\n    <kp>1000000.0</kp>\n    <kd>1.0</kd>\n\
+  \    <mu1>30.0</mu1>\n    <mu2>30.0</mu2>\n  </gazebo>\n  <gazebo reference=\"right_gripper_finger_link\"\
+  >\n    <material>Gazebo/Grey</material>\n    <kp>1000000.0</kp>\n    <kd>1.0</kd>\n\
+  \    <mu1>30.0</mu1>\n    <mu2>30.0</mu2>\n  </gazebo>\n  <!-- ros_control plugin\
+  \ -->\n  <gazebo>\n    <plugin filename=\"libgazebo_ros_control.so\" name=\"gazebo_ros_control\"\
+  >\n      <robotNamespace>/kuka_arm</robotNamespace>\n      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>\n\
+  \    </plugin>\n  </gazebo>\n  <!-- grasp plugin -->\n  <gazebo>\n    <plugin filename=\"\
+  libgazebo_grasp_fix.so\" name=\"gazebo_grasp_fix\">\n      <arm>\n        <arm_name>kuka_arm</arm_name>\n\
+  \        <palm_link>link_6</palm_link>\n        <gripper_link>right_gripper_finger_link</gripper_link>\n\
+  \        <gripper_link>left_gripper_finger_link</gripper_link>\n      </arm>\n \
+  \     <forces_angle_tolerance>100</forces_angle_tolerance>\n      <update_rate>4</update_rate>\n\
+  \      <grip_count_threshold>4</grip_count_threshold>\n      <max_grip_count>8</max_grip_count>\n\
+  \      <release_tolerance>0.003</release_tolerance>\n      <disable_collisions_on_attach>false</disable_collisions_on_attach>\n\
+  \      <contact_topic>__default_topic__</contact_topic>\n    </plugin>\n  </gazebo>\n\
+  \  <gazebo reference=\"kinect_link\">\n    <sensor name=\"openni_camera_camera\"\
+  \ type=\"depth\">\n      <always_on>1</always_on>\n      <visualize>true</visualize>\n\
+  \      <camera>\n        <horizontal_fov>1.047</horizontal_fov>\n        <image>\n\
+  \          <width>100</width>\n          <height>80</height>\n          <format>R8G8B8</format>\n\
+  \        </image>\n        <depth_camera>\n\n              </depth_camera>\n   \
+  \     <clip>\n          <near>0.1</near>\n          <far>10</far>\n        </clip>\n\
+  \      </camera>\n      <plugin filename=\"libgazebo_ros_openni_kinect.so\" name=\"\
+  camera_controller\">\n        <alwaysOn>true</alwaysOn>\n        <updateRate>10.0</updateRate>\n\
+  \        <cameraName>camera</cameraName>\n        <frameName>kinect_link_optical_frame</frameName>\n\
+  \        <imageTopicName>rgb/image_raw</imageTopicName>\n        <depthImageTopicName>depth/image_raw</depthImageTopicName>\n\
+  \        <pointCloudTopicName>depth/points</pointCloudTopicName>\n        <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>\n\
+  \        <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>\n\
+  \        <pointCloudCutoff>0.4</pointCloudCutoff>\n        <hackBaseline>0.07</hackBaseline>\n\
+  \        <distortionK1>0.0</distortionK1>\n        <distortionK2>0.0</distortionK2>\n\
+  \        <distortionK3>0.0</distortionK3>\n        <distortionT1>0.0</distortionT1>\n\
+  \        <distortionT2>0.0</distortionT2>\n        <CxPrime>0.0</CxPrime>\n    \
+  \    <Cx>0.0</Cx>\n        <Cy>0.0</Cy>\n        <focalLength>0.0</focalLength>\n\
+  \      </plugin>\n    </sensor>\n  </gazebo>\n  <!--Links-->\n  <link name=\"base_footprint\"\
+  />\n  <link name=\"base_link\">\n    <inertial>\n      <origin rpy=\"0 0 0\" xyz=\"\
+  0 0 0\"/>\n      <mass value=\"150\"/>\n      <inertia ixx=\"60\" ixy=\"0\" ixz=\"\
+  0\" iyy=\"70\" iyz=\"0\" izz=\"100\"/>\n    </inertial>\n    <visual>\n      <origin\
+  \ rpy=\"-1.570796327 0 0\" xyz=\"0 0 0\"/>\n      <geometry>\n        <mesh filename=\"\
+  package://kuka_arm/meshes/kr210l150/collision/base_link.stl\"/>\n      </geometry>\n\
+  \      <material name=\"\">\n        <color rgba=\"0.75294 0.75294 0.75294 1\"/>\n\
+  \      </material>\n    </visual>\n    <collision>\n      <origin rpy=\"0 0 0\"\
+  \ xyz=\"0 0 0.15\"/>\n      <geometry>\n        <box size=\"1 1 0.3\"/>\n      </geometry>\n\
+  \    </collision>\n  </link>\n  <link name=\"link_1\">\n    <inertial>\n      <origin\
+  \ rpy=\"0 0 0\" xyz=\"0 0 0.4\"/>\n      <mass value=\"138\"/>\n      <inertia ixx=\"\
+  30\" ixy=\"0\" ixz=\"0\" iyy=\"50\" iyz=\"0\" izz=\"50\"/>\n    </inertial>\n  \
+  \  <visual>\n      <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n      <geometry>\n   \
+  \     <mesh filename=\"package://kuka_arm/meshes/kr210l150/collision/link_1.stl\"\
+  />\n      </geometry>\n      <material name=\"\">\n        <color rgba=\"0.75294\
+  \ 0.75294 0.75294 1\"/>\n      </material>\n    </visual>\n    <collision>\n   \
+  \   <origin rpy=\"0 0 0\" xyz=\"0 0 0.325\"/>\n      <geometry>\n        <box size=\"\
+  1 1 0.65\"/>\n      </geometry>\n    </collision>\n  </link>\n  <link name=\"link_2\"\
+  >\n    <inertial>\n      <origin rpy=\"0 0 0\" xyz=\"0 0 0.44751\"/>\n      <mass\
+  \ value=\"95\"/>\n      <inertia ixx=\"40\" ixy=\"0\" ixz=\"0\" iyy=\"40\" iyz=\"\
+  0\" izz=\"10\"/>\n    </inertial>\n    <visual>\n      <origin rpy=\"0 0 0\" xyz=\"\
+  0 0 0\"/>\n      <geometry>\n        <mesh filename=\"package://kuka_arm/meshes/kr210l150/collision/link_2.stl\"\
+  />\n      </geometry>\n      <material name=\"\">\n        <color rgba=\"0.75294\
+  \ 0.75294 0.75294 1\"/>\n      </material>\n    </visual>\n    <collision>\n   \
+  \   <origin rpy=\"0 0 0\" xyz=\"0 -0.2 0.8\"/>\n      <geometry>\n        <box size=\"\
+  0.4 0.4 1.6\"/>\n      </geometry>\n    </collision>\n  </link>\n  <link name=\"\
+  link_3\">\n    <inertial>\n      <origin rpy=\"0 0 0\" xyz=\"0.18842 0.18344 -0.042799\"\
+  />\n      <mass value=\"71\"/>\n      <inertia ixx=\"1\" ixy=\"0\" ixz=\"0\" iyy=\"\
+  10\" iyz=\"0\" izz=\"10\"/>\n    </inertial>\n    <visual>\n      <origin rpy=\"\
+  0 0 0\" xyz=\"0 -0.184 0\"/>\n      <geometry>\n        <mesh filename=\"package://kuka_arm/meshes/kr210l150/collision/link_3.stl\"\
+  />\n      </geometry>\n      <material name=\"\">\n        <color rgba=\"0.75294\
+  \ 0.75294 0.75294 1\"/>\n      </material>\n    </visual>\n    <collision>\n   \
+  \   <origin rpy=\"0 0 0\" xyz=\"0.2 0 0\"/>\n      <geometry>\n        <box size=\"\
+  1.35 0.5 0.5\"/>\n      </geometry>\n    </collision>\n  </link>\n  <link name=\"\
+  link_4\">\n    <inertial>\n      <origin rpy=\"0 0 0\" xyz=\"0.27146 -0.007326 0\"\
+  />\n      <mass value=\"17\"/>\n      <inertia ixx=\"0.18\" ixy=\"0\" ixz=\"0\"\
+  \ iyy=\"0.55\" iyz=\"0\" izz=\"0.64\"/>\n    </inertial>\n    <visual>\n      <origin\
+  \ rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n      <geometry>\n        <mesh filename=\"package://kuka_arm/meshes/kr210l150/collision/link_4.stl\"\
+  />\n      </geometry>\n      <material name=\"\">\n        <color rgba=\"0.75294\
+  \ 0.75294 0.75294 1\"/>\n      </material>\n    </visual>\n    <collision>\n   \
+  \   <origin rpy=\"0 0 0\" xyz=\"0.315 0 0\"/>\n      <geometry>\n        <box size=\"\
+  0.63 0.35 0.25\"/>\n      </geometry>\n    </collision>\n  </link>\n  <link name=\"\
+  link_5\">\n    <inertial>\n      <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n      <mass\
+  \ value=\"7\"/>\n      <inertia ixx=\"0.04\" ixy=\"0\" ixz=\"0\" iyy=\"0.068\" iyz=\"\
+  0\" izz=\"0.068\"/>\n    </inertial>\n    <visual>\n      <origin rpy=\"0 0 0\"\
+  \ xyz=\"0 0 0\"/>\n      <geometry>\n        <mesh filename=\"package://kuka_arm/meshes/kr210l150/collision/link_5.stl\"\
+  />\n      </geometry>\n      <material name=\"\">\n        <color rgba=\"0.75294\
+  \ 0.75294 0.75294 1\"/>\n      </material>\n    </visual>\n    <collision>\n   \
+  \   <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n      <geometry>\n        <box size=\"\
+  0.34 0.23 0.23\"/>\n      </geometry>\n    </collision>\n  </link>\n  <link name=\"\
+  link_6\">\n    <inertial>\n      <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n      <mass\
+  \ value=\"0.5\"/>\n      <inertia ixx=\"0.004\" ixy=\"0\" ixz=\"0\" iyy=\"0.003\"\
+  \ iyz=\"0\" izz=\"0.003\"/>\n    </inertial>\n    <visual>\n      <origin rpy=\"\
+  0 0 0\" xyz=\"0 0 0\"/>\n      <geometry>\n        <mesh filename=\"package://kuka_arm/meshes/kr210l150/collision/link_6.stl\"\
+  />\n      </geometry>\n      <material name=\"\">\n        <color rgba=\"0.75294\
+  \ 0.75294 0.75294 1\"/>\n      </material>\n    </visual>\n    <collision>\n   \
+  \   <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n      <geometry>\n        <mesh filename=\"\
+  package://kuka_arm/meshes/kr210l150/collision/link_6.stl\"/>\n      </geometry>\n\
+  \    </collision>\n  </link>\n  <link name=\"gripper_link\">\n    <inertial>\n \
+  \     <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n      <mass value=\"0.3\"/>\n     \
+  \ <inertia ixx=\"0.0001\" ixy=\"0\" ixz=\"0\" iyy=\"0.0002\" iyz=\"0\" izz=\"0.0001\"\
+  />\n    </inertial>\n    <visual>\n      <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n\
+  \      <geometry>\n        <mesh filename=\"package://kuka_arm/meshes/gripper/gripper_base.dae\"\
+  />\n      </geometry>\n    </visual>\n    <collision>\n      <origin rpy=\"0 0 0\"\
+  \ xyz=\"0 0 0\"/>\n      <geometry>\n        <mesh filename=\"package://kuka_arm/meshes/gripper/gripper_base.dae\"\
+  />\n      </geometry>\n    </collision>\n  </link>\n  <link name=\"right_gripper_finger_link\"\
+  >\n    <inertial>\n      <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n      <mass value=\"\
+  0.1\"/>\n      <inertia ixx=\"0.002\" ixy=\"0\" ixz=\"0\" iyy=\"0.0002\" iyz=\"\
+  0\" izz=\"0.0002\"/>\n    </inertial>\n    <visual>\n      <origin rpy=\"0 0 0\"\
+  \ xyz=\"0 0 0\"/>\n      <geometry>\n        <mesh filename=\"package://kuka_arm/meshes/gripper/finger_right.dae\"\
+  />\n      </geometry>\n    </visual>\n    <collision>\n      <origin rpy=\"0 0 0\"\
+  \ xyz=\"0 0 0\"/>\n      <geometry>\n        <mesh filename=\"package://kuka_arm/meshes/gripper/finger_right_collision.dae\"\
+  />\n      </geometry>\n    </collision>\n  </link>\n  <link name=\"left_gripper_finger_link\"\
+  >\n    <inertial>\n      <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n      <mass value=\"\
+  0.1\"/>\n      <inertia ixx=\"0.002\" ixy=\"0\" ixz=\"0\" iyy=\"0.0002\" iyz=\"\
+  0\" izz=\"0.0002\"/>\n    </inertial>\n    <visual>\n      <origin rpy=\"0 0 0\"\
+  \ xyz=\"0 0 0\"/>\n      <geometry>\n        <mesh filename=\"package://kuka_arm/meshes/gripper/finger_left.dae\"\
+  />\n      </geometry>\n    </visual>\n    <collision>\n      <origin rpy=\"0 0 0\"\
+  \ xyz=\"0 0 0\"/>\n      <geometry>\n        <mesh filename=\"package://kuka_arm/meshes/gripper/finger_left_collision.dae\"\
+  />\n      </geometry>\n    </collision>\n  </link>\n  <joint name=\"kinect_joint_optical_frame\"\
+  \ type=\"fixed\">\n    <origin rpy=\"-1.58 0 -1.58\" xyz=\"0 0 0\"/>\n    <parent\
+  \ link=\"kinect_link\"/>\n    <child link=\"kinect_link_optical_frame\"/>\n  </joint>\n\
+  \  <link name=\"kinect_link_optical_frame\"/>\n  <joint name=\"kinect_joint\" type=\"\
+  fixed\">\n    <axis xyz=\"0 1 0\"/>\n    <origin rpy=\"0 0 0\" xyz=\"0 0 0.3\"/>\n\
+  \    <parent link=\"link_4\"/>\n    <child link=\"kinect_link\"/>\n  </joint>\n\
+  \  <!-- kinect camera -->\n  <link name=\"kinect_link\">\n    <collision>\n    \
+  \  <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n      <geometry>\n        <box size=\"\
+  0.1 0.1 0.1\"/>\n      </geometry>\n    </collision>\n    <visual>\n      <origin\
+  \ rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n      <geometry>\n        <box size=\"0.1 0.1 0.1\"\
+  />\n      </geometry>\n    </visual>\n    <inertial>\n      <mass value=\"1e-5\"\
+  />\n      <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n      <inertia ixx=\"1e-6\" ixy=\"\
+  0\" ixz=\"0\" iyy=\"1e-6\" iyz=\"0\" izz=\"1e-6\"/>\n    </inertial>\n  </link>\n\
+  \  <joint name=\"right_gripper_finger_joint\" type=\"prismatic\">\n    <origin rpy=\"\
+  0 0 0\" xyz=\"0.15 -0.0725 0\"/>\n    <parent link=\"gripper_link\"/>\n    <child\
+  \ link=\"right_gripper_finger_link\"/>\n    <axis xyz=\"0 1 0\"/>\n    <limit effort=\"\
+  100\" lower=\"-0.01\" upper=\"0.06\" velocity=\"0.05\"/>\n    <dynamics damping=\"\
+  0.7\"/>\n  </joint>\n  <joint name=\"left_gripper_finger_joint\" type=\"prismatic\"\
+  >\n    <origin rpy=\"0 0 0\" xyz=\"0.15 0.0725 0\"/>\n    <parent link=\"gripper_link\"\
+  />\n    <child link=\"left_gripper_finger_link\"/>\n    <axis xyz=\"0 -1 0\"/>\n\
+  \    <limit effort=\"100\" lower=\"-0.01\" upper=\"0.06\" velocity=\"0.05\"/>\n\
+  \    <dynamics damping=\"0.7\"/>\n  </joint>\n  <joint name=\"gripper_joint\" type=\"\
+  fixed\">\n    <parent link=\"link_6\"/>\n    <child link=\"gripper_link\"/>\n  \
+  \  <origin rpy=\"0 0 0\" xyz=\"0.11 0 0\"/>\n    <!--0.087-->\n    <axis xyz=\"\
+  0 1 0\"/>\n  </joint>\n  <transmission name=\"tran7\">\n    <type>transmission_interface/SimpleTransmission</type>\n\
+  \    <joint name=\"left_gripper_finger_joint\">\n      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>\n\
+  \    </joint>\n    <actuator name=\"motor7\">\n      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>\n\
+  \      <mechanicalReduction>1</mechanicalReduction>\n    </actuator>\n  </transmission>\n\
+  \  <transmission name=\"tran8\">\n    <type>transmission_interface/SimpleTransmission</type>\n\
+  \    <joint name=\"right_gripper_finger_joint\">\n      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>\n\
+  \    </joint>\n    <actuator name=\"motor8\">\n      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>\n\
+  \      <mechanicalReduction>1</mechanicalReduction>\n    </actuator>\n  </transmission>\n\
+  \  <!-- joints -->\n  <joint name=\"fixed_base_joint\" type=\"fixed\">\n    <parent\
+  \ link=\"base_footprint\"/>\n    <child link=\"base_link\"/>\n    <origin rpy=\"\
+  0 0 0\" xyz=\"0 0 0\"/>\n  </joint>\n  <joint name=\"joint_1\" type=\"revolute\"\
+  >\n    <origin rpy=\"0 0 0\" xyz=\"0 0 0.33\"/>\n    <parent link=\"base_link\"\
+  />\n    <child link=\"link_1\"/>\n    <axis xyz=\"0 0 1\"/>\n    <limit effort=\"\
+  300\" lower=\"-3.228859205\" upper=\"3.228859205\" velocity=\"2.146755039\"/>\n\
+  \  </joint>\n  <joint name=\"joint_2\" type=\"revolute\">\n    <origin rpy=\"0 0\
+  \ 0\" xyz=\"0.35 0 0.42\"/>\n    <parent link=\"link_1\"/>\n    <child link=\"link_2\"\
+  />\n    <axis xyz=\"0 1 0\"/>\n    <limit effort=\"300\" lower=\"-0.785398185\"\
+  \ upper=\"1.483529905\" velocity=\"2.007128695\"/>\n  </joint>\n  <joint name=\"\
+  joint_3\" type=\"revolute\">\n    <origin rpy=\"0 0 0\" xyz=\"0 0 1.25\"/>\n   \
+  \ <parent link=\"link_2\"/>\n    <child link=\"link_3\"/>\n    <axis xyz=\"0 1 0\"\
+  />\n    <limit effort=\"300\" lower=\"-3.66519153\" upper=\"1.134464045\" velocity=\"\
+  1.954768816\"/>\n  </joint>\n  <joint name=\"joint_4\" type=\"revolute\">\n    <origin\
+  \ rpy=\"0 0 0\" xyz=\"0.96 0 -0.054\"/>\n    <parent link=\"link_3\"/>\n    <child\
+  \ link=\"link_4\"/>\n    <axis xyz=\"1 0 0\"/>\n    <limit effort=\"300\" lower=\"\
+  -6.10865255\" upper=\"6.10865255\" velocity=\"3.124139447\"/>\n  </joint>\n  <joint\
+  \ name=\"joint_5\" type=\"revolute\">\n    <origin rpy=\"0 0 0\" xyz=\"0.54 0 0\"\
+  />\n    <parent link=\"link_4\"/>\n    <child link=\"link_5\"/>\n    <axis xyz=\"\
+  0 1 0\"/>\n    <limit effort=\"300\" lower=\"-2.181661625\" upper=\"2.181661625\"\
+  \ velocity=\"3.001966396\"/>\n  </joint>\n  <joint name=\"joint_6\" type=\"revolute\"\
+  >\n    <origin rpy=\"0 0 0\" xyz=\"0.193 0 0\"/>\n    <parent link=\"link_5\"/>\n\
+  \    <child link=\"link_6\"/>\n    <axis xyz=\"1 0 0\"/>\n    <limit effort=\"300\"\
+  \ lower=\"-6.10865255\" upper=\"6.10865255\" velocity=\"3.822271167\"/>\n  </joint>\n\
+  \  <!--Transmission and actuators-->\n  <transmission name=\"tran1\">\n    <type>transmission_interface/SimpleTransmission</type>\n\
+  \    <joint name=\"joint_1\">\n      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>\n\
+  \    </joint>\n    <actuator name=\"motor1\">\n      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>\n\
+  \      <mechanicalReduction>1</mechanicalReduction>\n    </actuator>\n  </transmission>\n\
+  \  <transmission name=\"tran2\">\n    <type>transmission_interface/SimpleTransmission</type>\n\
+  \    <joint name=\"joint_2\">\n      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>\n\
+  \    </joint>\n    <actuator name=\"motor2\">\n      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>\n\
+  \      <mechanicalReduction>1</mechanicalReduction>\n    </actuator>\n  </transmission>\n\
+  \  <transmission name=\"tran3\">\n    <type>transmission_interface/SimpleTransmission</type>\n\
+  \    <joint name=\"joint_3\">\n      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>\n\
+  \    </joint>\n    <actuator name=\"motor3\">\n      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>\n\
+  \      <mechanicalReduction>1</mechanicalReduction>\n    </actuator>\n  </transmission>\n\
+  \  <transmission name=\"tran4\">\n    <type>transmission_interface/SimpleTransmission</type>\n\
+  \    <joint name=\"joint_4\">\n      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>\n\
+  \    </joint>\n    <actuator name=\"motor4\">\n      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>\n\
+  \      <mechanicalReduction>1</mechanicalReduction>\n    </actuator>\n  </transmission>\n\
+  \  <transmission name=\"tran5\">\n    <type>transmission_interface/SimpleTransmission</type>\n\
+  \    <joint name=\"joint_5\">\n      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>\n\
+  \    </joint>\n    <actuator name=\"motor5\">\n      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>\n\
+  \      <mechanicalReduction>1</mechanicalReduction>\n    </actuator>\n  </transmission>\n\
+  \  <transmission name=\"tran6\">\n    <type>transmission_interface/SimpleTransmission</type>\n\
+  \    <joint name=\"joint_6\">\n      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>\n\
+  \    </joint>\n    <actuator name=\"motor6\">\n      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>\n\
+  \      <mechanicalReduction>1</mechanicalReduction>\n    </actuator>\n  </transmission>\n\
+  </robot>\n\n"
+robot_description_kinematics:
+  arm_group: {kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin, kinematics_solver_attempts: 3,
+    kinematics_solver_search_resolution: 0.005, kinematics_solver_timeout: 0.005}
+robot_description_planning:
+  joint_limits:
+    joint_1: {has_acceleration_limits: false, has_velocity_limits: true, max_acceleration: 0,
+      max_velocity: 2.146755039}
+    joint_2: {has_acceleration_limits: false, has_velocity_limits: true, max_acceleration: 0,
+      max_velocity: 2.007128695}
+    joint_3: {has_acceleration_limits: false, has_velocity_limits: true, max_acceleration: 0,
+      max_velocity: 1.954768816}
+    joint_4: {has_acceleration_limits: false, has_velocity_limits: true, max_acceleration: 0,
+      max_velocity: 3.124139447}
+    joint_5: {has_acceleration_limits: false, has_velocity_limits: true, max_acceleration: 0,
+      max_velocity: 3.001966396}
+    joint_6: {has_acceleration_limits: false, has_velocity_limits: true, max_acceleration: 0,
+      max_velocity: 3.822271167}
+    left_gripper_finger_joint: {has_acceleration_limits: false, has_velocity_limits: true,
+      max_acceleration: 0, max_velocity: 0.5}
+    right_gripper_finger_joint: {has_acceleration_limits: false, has_velocity_limits: true,
+      max_acceleration: 0, max_velocity: 0.5}
+robot_description_semantic: "<?xml version=\"1.0\" ?>\n<!--This does not replace URDF,\
+  \ and is not an extension of URDF.\n    This is a format for representing semantic\
+  \ information about the robot structure.\n    A URDF file must exist for this robot\
+  \ as well, where the joints and the links that are referenced are defined\n-->\n\
+  <robot name=\"kuka_arm\">\n    <!--GROUPS: Representation of a set of joints and\
+  \ links. This can be useful for specifying DOF to plan for, defining arms, end effectors,\
+  \ etc-->\n    <!--LINKS: When a link is specified, the parent joint of that link\
+  \ (if it exists) is automatically included-->\n    <!--JOINTS: When a joint is specified,\
+  \ the child link of that joint (which will always exist) is automatically included-->\n\
+  \    <!--CHAINS: When a chain is specified, all the links along the chain (including\
+  \ endpoints) are included in the group. Additionally, all the joints that are parents\
+  \ to included links are also included. This means that joints along the chain and\
+  \ the parent joint of the base link are included in the group-->\n    <!--SUBGROUPS:\
+  \ Groups can also be formed by referencing to already defined group names-->\n \
+  \   <group name=\"arm_group\">\n        <chain base_link=\"base_footprint\" tip_link=\"\
+  gripper_link\" />\n    </group>\n    <group name=\"gripper_group\">\n        <link\
+  \ name=\"gripper_link\" />\n        <link name=\"left_gripper_finger_link\" />\n\
+  \        <link name=\"right_gripper_finger_link\" />\n    </group>\n    <!--GROUP\
+  \ STATES: Purpose: Define a named state for a particular group, in terms of joint\
+  \ values. This is useful to define states like 'folded arms'-->\n    <group_state\
+  \ name=\"idle_pose\" group=\"arm_group\">\n        <joint name=\"joint_1\" value=\"\
+  0\" />\n        <joint name=\"joint_2\" value=\"0\" />\n        <joint name=\"joint_3\"\
+  \ value=\"0\" />\n        <joint name=\"joint_4\" value=\"0\" />\n        <joint\
+  \ name=\"joint_5\" value=\"0\" />\n        <joint name=\"joint_6\" value=\"0\" />\n\
+  \    </group_state>\n    <group_state name=\"closed_pose\" group=\"gripper_group\"\
+  >\n        <joint name=\"left_gripper_finger_joint\" value=\"0.06\" />\n       \
+  \ <joint name=\"right_gripper_finger_joint\" value=\"0.06\" />\n    </group_state>\n\
+  \    <group_state name=\"open_pose\" group=\"gripper_group\">\n        <joint name=\"\
+  left_gripper_finger_joint\" value=\"0\" />\n        <joint name=\"right_gripper_finger_joint\"\
+  \ value=\"0\" />\n    </group_state>\n    <!--END EFFECTOR: Purpose: Represent information\
+  \ about an end effector.-->\n    <end_effector name=\"gripper\" parent_link=\"link_6\"\
+  \ group=\"gripper_group\" />\n    <!--VIRTUAL JOINT: Purpose: this element defines\
+  \ a virtual joint between a robot link and an external frame of reference (considered\
+  \ fixed with respect to the robot)-->\n    <virtual_joint name=\"world_joint\" type=\"\
+  fixed\" parent_frame=\"world\" child_link=\"base_footprint\" />\n    <!--DISABLE\
+  \ COLLISIONS: By default it is assumed that any link of the robot could potentially\
+  \ come into collision with any other link in the robot. This tag disables collision\
+  \ checking between a specified pair of links. -->\n    <disable_collisions link1=\"\
+  base_link\" link2=\"link_1\" reason=\"Adjacent\" />\n    <disable_collisions link1=\"\
+  base_link\" link2=\"link_2\" reason=\"Never\" />\n    <disable_collisions link1=\"\
+  base_link\" link2=\"link_3\" reason=\"Never\" />\n    <disable_collisions link1=\"\
+  gripper_link\" link2=\"left_gripper_finger_link\" reason=\"Adjacent\" />\n    <disable_collisions\
+  \ link1=\"gripper_link\" link2=\"link_2\" reason=\"Never\" />\n    <disable_collisions\
+  \ link1=\"gripper_link\" link2=\"link_3\" reason=\"Never\" />\n    <disable_collisions\
+  \ link1=\"gripper_link\" link2=\"link_4\" reason=\"Never\" />\n    <disable_collisions\
+  \ link1=\"gripper_link\" link2=\"link_5\" reason=\"Never\" />\n    <disable_collisions\
+  \ link1=\"gripper_link\" link2=\"link_6\" reason=\"Adjacent\" />\n    <disable_collisions\
+  \ link1=\"gripper_link\" link2=\"right_gripper_finger_link\" reason=\"Adjacent\"\
+  \ />\n    <disable_collisions link1=\"left_gripper_finger_link\" link2=\"link_2\"\
+  \ reason=\"Never\" />\n    <disable_collisions link1=\"left_gripper_finger_link\"\
+  \ link2=\"link_3\" reason=\"Never\" />\n    <disable_collisions link1=\"left_gripper_finger_link\"\
+  \ link2=\"link_4\" reason=\"Never\" />\n    <disable_collisions link1=\"left_gripper_finger_link\"\
+  \ link2=\"link_5\" reason=\"Never\" />\n    <disable_collisions link1=\"left_gripper_finger_link\"\
+  \ link2=\"link_6\" reason=\"Never\" />\n    <disable_collisions link1=\"left_gripper_finger_link\"\
+  \ link2=\"right_gripper_finger_link\" reason=\"Never\" />\n    <disable_collisions\
+  \ link1=\"link_1\" link2=\"link_2\" reason=\"Adjacent\" />\n    <disable_collisions\
+  \ link1=\"link_1\" link2=\"link_3\" reason=\"Never\" />\n    <disable_collisions\
+  \ link1=\"link_2\" link2=\"link_3\" reason=\"Adjacent\" />\n    <disable_collisions\
+  \ link1=\"link_2\" link2=\"link_4\" reason=\"Never\" />\n    <disable_collisions\
+  \ link1=\"link_2\" link2=\"link_5\" reason=\"Never\" />\n    <disable_collisions\
+  \ link1=\"link_2\" link2=\"link_6\" reason=\"Never\" />\n    <disable_collisions\
+  \ link1=\"link_3\" link2=\"link_4\" reason=\"Adjacent\" />\n    <disable_collisions\
+  \ link1=\"link_3\" link2=\"link_5\" reason=\"Never\" />\n    <disable_collisions\
+  \ link1=\"link_3\" link2=\"link_6\" reason=\"Never\" />\n    <disable_collisions\
+  \ link1=\"link_3\" link2=\"right_gripper_finger_link\" reason=\"Never\" />\n   \
+  \ <disable_collisions link1=\"link_4\" link2=\"link_5\" reason=\"Adjacent\" />\n\
+  \    <disable_collisions link1=\"link_4\" link2=\"right_gripper_finger_link\" reason=\"\
+  Never\" />\n    <disable_collisions link1=\"link_5\" link2=\"link_6\" reason=\"\
+  Adjacent\" />\n    <disable_collisions link1=\"link_5\" link2=\"right_gripper_finger_link\"\
+  \ reason=\"Never\" />\n    <disable_collisions link1=\"link_6\" link2=\"right_gripper_finger_link\"\
+  \ reason=\"Never\" />\n</robot>\n"
+rosdistro: 'kinetic
+
+  '
+roslaunch:
+  uris: {host_loki_desktop__33819: 'http://loki-desktop:33819/', host_loki_desktop__35107: 'http://loki-desktop:35107/',
+    host_loki_desktop__39327: 'http://loki-desktop:39327/', host_loki_desktop__40411: 'http://loki-desktop:40411/',
+    host_loki_desktop__43965: 'http://loki-desktop:43965/', host_loki_desktop__45449: 'http://loki-desktop:45449/',
+    host_loki_desktop__46059: 'http://loki-desktop:46059/'}
+rosversion: '1.12.13
+
+  '
+run_id: d476ad44-8f58-11e8-99db-d05099543e2d
+target_description: "<?xml version=\"1.0\" ?>\n<!-- ===================================================================================\
+  \ -->\n<!-- |    This document was autogenerated by xacro from /home/magnus/kr210_ws/src/RoboND-Kinematics-Project/kuka_arm/urdf/target.urdf.xacro\
+  \ | -->\n<!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                \
+  \                 | -->\n<!-- ===================================================================================\
+  \ -->\n<robot name=\"target_box\">\n  <link name=\"target_link_1\">\n    <inertial>\n\
+  \      <origin xyz=\"0 0 0\"/>\n      <mass value=\"0.05\"/>\n      <inertia ixx=\"\
+  0.006\" ixy=\"0\" ixz=\"0\" iyy=\"0.006\" iyz=\"0\" izz=\"0.002\"/>\n    </inertial>\n\
+  \    <visual>\n      <origin xyz=\"0 0 0\"/>\n      <geometry>\n        <cylinder\
+  \ length=\"0.25\" radius=\"0.05\"/>\n        <!--box size=\"0.10 0.10 0.25\"/-->\n\
+  \      </geometry>\n    </visual>\n    <collision>\n      <origin xyz=\"0 0 0\"\
+  />\n      <geometry>\n        <cylinder length=\"0.25\" radius=\"0.05\"/>\n    \
+  \    <!--box size=\"0.10 0.10 0.25\"/-->\n      </geometry>\n    </collision>\n\
+  \  </link>\n  <gazebo reference=\"target_link_1\">\n    <material>Gazebo/Blue</material>\n\
+  \    <mu1>1.0</mu1>\n    <mu2>1.0</mu2>\n  </gazebo>\n</robot>\n\n"
+target_description_argument: -urdf -param target_description -x 2.6 -y 0.9 -z 2.445
+  -model target_model
+target_drop_location: {x: 0.0, y: 2.5, z: 0.0}
+target_spawn: {select_target_spawn: 0}
+target_spawn_location: {x: 2.6, y: 0.9, z: 2.445}
+tilt_laser_self_filter:
+  min_sensor_dist: 0.05
+  self_see_default_padding: 0.01
+  self_see_default_scale: 1.0
+  self_see_links:
+  - {name: base_link}
+  - {name: link_4}
+  - {name: link_1}
+  - {name: link_2}
+  - {name: link_3}
+  - {name: link_5}
+  - {name: link_6}
+  - {name: gripper_link}
+  - {name: left_gripper_finger_link}
+  - {name: right_gripper_finger_link}
+  sensor_frame: kinect_link_optical_frame
+use_sim_time: true
+voxblox_node: {allow_clear: true, color_mode: lambert, max_block_distance_from_body: 3.0,
+  max_integration_time_s: 1, max_ray_length_m: 3.0, mesh_filename: /home/magnus/kr210_ws/src/voxblox/voxblox_ros/mesh_results/argo_loki_desktop_25646_2269074630986003581.ply,
+  method: fast, min_time_between_msgs_sec: 0, publish_esdf_map: true, publish_tsdf_info: true,
+  publish_tsdf_map: true, tsdf_voxel_size: 0.04, tsdf_voxels_per_side: 16, update_mesh_every_n_sec: 10,
+  use_const_weight: false, use_tf_transforms: true, verbose: true, voxel_carving_enabled: true}

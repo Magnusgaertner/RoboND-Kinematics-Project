@@ -31,16 +31,16 @@
     <visual>
       <origin xyz="0 0 0" rpy="${-pi/2} 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/visual/base_link.dae"/>
+        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/base_link.stl"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 0" rpy="${-pi/2} 0 0"/>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/base_link.stl"/>
+        <box size="1 1 0.3" />
       </geometry>
     </collision>
   </link>
@@ -53,16 +53,16 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/visual/link_1.dae"/>
+        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/link_1.stl"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0.325" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/link_1.stl"/>
+        <box size="1 1 0.65" />
       </geometry>
     </collision>
   </link>
@@ -73,18 +73,18 @@
       <inertia ixx="40" ixy="0" ixz="0" iyy="40" iyz="0" izz="10"/>
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="${-pi/2} 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/visual/link_2.dae"/>
+        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/link_2.stl"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 -0.2 0.8" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/link_2.stl"/>
+        <box size="0.4 0.4 1.6" />
       </geometry>
     </collision>
   </link>
@@ -95,18 +95,18 @@
       <inertia ixx="1" ixy="0" ixz="0" iyy="10" iyz="0" izz="10"/>
     </inertial>
     <visual>
-      <origin xyz="0 -0.184 0" rpy="${-pi/2} 0 0"/>
+      <origin xyz="0 -0.184 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/visual/link_3.dae"/>
+        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/link_3.stl"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
       </material>
     </visual>
     <collision>
-      <origin xyz="0 -0.184 0" rpy="0 0 0"/>
+      <origin xyz="0.2 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/link_3.stl"/>
+        <box size="1.35 0.5 0.5" />
       </geometry>
     </collision>
   </link>
@@ -117,18 +117,18 @@
       <inertia ixx="0.18" ixy="0" ixz="0" iyy="0.55" iyz="0" izz="0.64"/>
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="${-pi/2} 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/visual/link_4.dae"/>
+        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/link_4.stl"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0.315 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/link_4.stl"/>
+        <box size="0.63 0.35 0.25" />
       </geometry>
     </collision>
   </link>
@@ -139,9 +139,9 @@
       <inertia ixx="0.04" ixy="0" ixz="0" iyy="0.068" iyz="0" izz="0.068"/>
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="${-pi/2} 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/visual/link_5.dae"/>
+        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/link_5.stl"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -150,7 +150,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/link_5.stl"/>
+        <box size="0.34 0.23 0.23" />
       </geometry>
     </collision>
   </link>
@@ -163,7 +163,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://kuka_arm/meshes/kr210l150/visual/link_6.dae"/>
+        <mesh filename="package://kuka_arm/meshes/kr210l150/collision/link_6.stl"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
