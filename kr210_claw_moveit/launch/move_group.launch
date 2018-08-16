@@ -47,8 +47,10 @@
         <env name="DISPLAY" value="$(optenv DISPLAY :0)"/>
 
 
-        <param name="collision_detector" value="my_checker"/>
+        <!--param name="collision_detector" value="my_checker"/-->
         <remap from="/move_group/esdf_map_in" to="/voxblox_node/esdf_map_out"/>
+        <remap from="/move_group/tsdf_map_in" to="/voxblox_node/tsdf_map_out"/>
+        <param name="world_frame" value="world" />
         <param name="tsdf_voxel_size" value="0.04" />
         <param name="tsdf_voxels_per_side" value="16" />
         <param name="voxel_carving_enabled" value="true" />

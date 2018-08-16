@@ -1,12 +1,12 @@
 stomp/arm_group:
   group_name: arm_group
   optimization:
-    num_timesteps: 50
+    num_timesteps: 100
     num_iterations: 50
     num_iterations_after_valid: 0    
     num_rollouts: 10
     max_rollouts: 100
-    initialization_method: 1 #[1 : LINEAR_INTERPOLATION, 2 : CUBIC_POLYNOMIAL, 3 : MININUM_CONTROL_COST
+    initialization_method: 3 #[1 : LINEAR_INTERPOLATION, 2 : CUBIC_POLYNOMIAL, 3 : MININUM_CONTROL_COST
     control_cost_weight: 0.0
   task:
     noise_generator:
