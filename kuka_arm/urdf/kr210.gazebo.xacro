@@ -114,7 +114,7 @@
           </camera>
           <plugin name="camera_controller" filename="libgazebo_ros_openni_kinect.so">
               <alwaysOn>true</alwaysOn>
-                  <updateRate>10.0</updateRate>
+                  <updateRate>2.0</updateRate>
                   <cameraName>camera</cameraName>
                   <frameName>kinect_link_optical_frame</frameName>
               <imageTopicName>rgb/image_raw</imageTopicName>

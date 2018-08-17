@@ -5,6 +5,9 @@
     <!-- GDB Debug Option -->
     <arg name="debug" default="false"/>
     <arg unless="$(arg debug)" name="launch_prefix" value=""/>
+
+
+         <!--"terminator -mx valgrind - -tool=callgrind - -callgrind-out-file=callgrind.out.node_name.%p"/-->
     <arg if="$(arg debug)" name="launch_prefix"
          value="gdb -x $(find kr210_claw_moveit)/launch/gdb_settings.gdb --ex run --args"/>
 
@@ -47,7 +50,7 @@
         <env name="DISPLAY" value="$(optenv DISPLAY :0)"/>
 
 
-        <!--param name="collision_detector" value="my_checker"/-->
+        <param name="collision_detector" value="my_checker"/>
         <remap from="/move_group/esdf_map_in" to="/voxblox_node/esdf_map_out"/>
         <remap from="/move_group/tsdf_map_in" to="/voxblox_node/tsdf_map_out"/>
         <param name="world_frame" value="world" />
