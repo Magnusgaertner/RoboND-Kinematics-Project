@@ -104,7 +104,7 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='kinematics_bin'>
+      <!--model name='kinematics_bin'>
         <pose frame=''>0 2.5 0.204873 0 0 -0.006466</pose>
         <scale>1 1 1</scale>
         <link name='link_0'>
@@ -113,7 +113,7 @@
           <acceleration>0.42424 0.020946 4.04499 1.74618 0.135168 -3.14135</acceleration>
           <wrench>0.42424 0.020946 4.04499 0 -0 0</wrench>
         </link>
-      </model>
+      </model-->
       <model name='kinematics_shelf'>
         <pose frame=''>2.7 0 1.036 0 -0 1.57</pose>
         <scale>1 1 1</scale>
@@ -135,7 +135,7 @@
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
-    <model name='cafe'>
+    <!--model name='cafe'>
       <static>1</static>
       <link name='link'>
         <collision name='main_floor'>
@@ -360,7 +360,7 @@
         <kinematic>0</kinematic>
       </link>
       <pose frame=''>1.85017 0.425631 0 0 -0 0</pose>
-    </model>
+    </model-->
     <model name='kinematics_shelf'>
       <static>1</static>
       <link name='link_0'>
@@ -461,7 +461,7 @@
       <allow_auto_disable>1</allow_auto_disable>
       <pose frame=''>2.83712 -0.355574 0 0 -0 0</pose>
     </model>
-    <model name='kinematics_bin'>
+    <!--model name='kinematics_bin'>
       <link name='link_0'>
         <pose frame=''>0 -0 0 0 -0 0</pose>
         <inertial>
@@ -559,6 +559,6 @@
       <static>0</static>
       <allow_auto_disable>1</allow_auto_disable>
       <pose frame=''>0.329464 2.03102 0 0 -0 0</pose>
-    </model>
+    </model-->
   </world>
 </sdf>
