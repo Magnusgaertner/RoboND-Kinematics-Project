@@ -353,7 +353,7 @@
 
                <joint name="camera4_joint" type="fixed">
                   <axis xyz="0 1 0" />
-                  <origin xyz="1 0 5" rpy="0 1 0"/>
+                  <origin xyz="0 0 5" rpy="0 1.2 0"/>
                   <parent link="base_link"/>
                   <child link="camera4_link"/>
                </joint>

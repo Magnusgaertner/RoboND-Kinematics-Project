@@ -54,7 +54,7 @@
         <remap from="/move_group/esdf_map_in" to="/voxblox_node/esdf_map_out"/>
         <remap from="/move_group/tsdf_map_in" to="/voxblox_node/tsdf_map_out"/>
         <param name="world_frame" value="world" />
-        <param name="tsdf_voxel_size" value="0.04" />
+        <param name="tsdf_voxel_size" value="0.1" />
         <param name="tsdf_voxels_per_side" value="16" />
         <param name="voxel_carving_enabled" value="true" />
         <param name="color_mode" value="lambert" />
@@ -62,7 +62,7 @@
         <param name="publish_esdf_map" value="true" />
         <param name="publish_tsdf_info" value="true" />
         <param name="use_tf_transforms" value="true" />
-        <param name="update_mesh_every_n_sec" value="10" />
+        <param name="update_mesh_every_n_sec" value="0.1" />
         <param name="min_time_between_msgs_sec" value="0" />
         <param name="max_block_distance_from_body" value="3.0" />
         <param name="max_integration_time_s" value="1" />
