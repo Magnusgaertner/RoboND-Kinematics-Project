@@ -266,7 +266,7 @@
     </collision>
   </link>
 
- <joint name="kinect_joint_optical_frame" type="fixed">
+    <joint name="kinect_joint_optical_frame" type="fixed">
 
       <origin xyz="0 0 0" rpy="-1.58 0 -1.58"/>
       <parent link="kinect_link"/>
@@ -280,7 +280,7 @@
       <origin xyz="0 0 0.3" rpy="0 0 0"/>
       <parent link="link_4"/>
       <child link="kinect_link"/>
-    </joint>
+   </joint>
 
     <!-- kinect camera -->
     <link name="kinect_link">
@@ -291,6 +291,81 @@
       </inertial>
     </link>
 
+
+    <joint name="camera2_optical_joint" type="fixed">
+
+      <origin xyz="0 0 0" rpy="-1.58 0 -1.58"/>
+      <parent link="camera2_link"/>
+      <child link="camera2_optical_frame"/>
+    </joint>
+
+    <link name="camera2_optical_frame"/>
+
+   <joint name="camera2_joint" type="fixed">
+      <axis xyz="0 1 0" />
+      <origin xyz="0 -3 2" rpy="0 0 1"/>
+      <parent link="base_link"/>
+      <child link="camera2_link"/>
+   </joint>
+
+    <!-- kinect camera -->
+    <link name="camera2_link">
+      <inertial>
+        <mass value="1e-5" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+      </inertial>
+    </link>
+
+        <joint name="camera3_optical_joint" type="fixed">
+
+          <origin xyz="0 0 0" rpy="-1.58 0 -1.58"/>
+          <parent link="camera3_link"/>
+          <child link="camera3_optical_frame"/>
+        </joint>
+
+        <link name="camera3_optical_frame"/>
+
+       <joint name="camera3_joint" type="fixed">
+          <axis xyz="0 1 0" />
+          <origin xyz="0 3 2" rpy="0 0 -1"/>
+          <parent link="base_link"/>
+          <child link="camera3_link"/>
+       </joint>
+
+        <!-- kinect camera -->
+        <link name="camera3_link">
+          <inertial>
+            <mass value="1e-5" />
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+          </inertial>
+        </link>
+
+                <joint name="camera4_optical_joint" type="fixed">
+
+                  <origin xyz="0 0 0" rpy="-1.58 0 -1.58"/>
+                  <parent link="camera4_link"/>
+                  <child link="camera4_optical_frame"/>
+                </joint>
+
+                <link name="camera4_optical_frame"/>
+
+               <joint name="camera4_joint" type="fixed">
+                  <axis xyz="0 1 0" />
+                  <origin xyz="1 0 5" rpy="0 1 0"/>
+                  <parent link="base_link"/>
+                  <child link="camera4_link"/>
+               </joint>
+
+                <!-- kinect camera -->
+                <link name="camera4_link">
+                  <inertial>
+                    <mass value="1e-5" />
+                    <origin xyz="0 0 0" rpy="0 0 0"/>
+                    <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+                  </inertial>
+                </link>
 
 
   <joint name="right_gripper_finger_joint" type="prismatic">

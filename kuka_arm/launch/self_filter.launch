@@ -1,11 +1,6 @@
 <launch>
     <node pkg="robot_self_filter" type="self_filter" respawn="true" name="tilt_laser_self_filter" output="screen">
-
-        <!-- The topic for the input cloud -->
         <remap from="cloud_in" to="/camera/depth/points" />
-
-
-        <!-- The topic for the output cloud -->
         <remap from="cloud_out" to="/scan_cloud_filtered" />
 
         <!-- The frame of the sensor used to obtain the data to be
@@ -14,7 +9,7 @@
         <param name="sensor_frame" type="string" value="kinect_link_optical_frame" />
 
         <param name="min_sensor_dist" type="double" value=".05"/>
-        <param name="self_see_default_padding" type="double" value=".01"/>
+        <param name="self_see_default_padding" type="double" value=".05"/>
         <param name="self_see_default_scale" type="double" value="1.0"/>
         <rosparam>
             self_see_links:
@@ -25,9 +20,90 @@
                 - name: link_3
                 - name: link_5
                 - name: link_6
-                - name: gripper_link
+                - name: gripper_link1
                 - name: left_gripper_finger_link
                 - name: right_gripper_finger_link
         </rosparam>
     </node>
+
+        <node pkg="robot_self_filter" type="self_filter" respawn="true" name="laser2_self_filter" output="screen">
+            <remap from="cloud_in" to="/camera2/depth/points" />
+            <remap from="cloud_out" to="/scan_cloud_filtered" />
+
+            <!-- The frame of the sensor used to obtain the data to be
+              filtered; This parameter is optional. If it is not specified,
+              shadow points will be considered outside -->
+            <param name="sensor_frame" type="string" value="camera2_optical_frame" />
+
+            <param name="min_sensor_dist" type="double" value=".05"/>
+            <param name="self_see_default_padding" type="double" value=".05"/>
+            <param name="self_see_default_scale" type="double" value="1.0"/>
+            <rosparam>
+                self_see_links:
+                    - name: base_link
+                    - name: link_4
+                    - name: link_1
+                    - name: link_2
+                    - name: link_3
+                    - name: link_5
+                    - name: link_6
+                    - name: gripper_link
+                    - name: left_gripper_finger_link
+                    - name: right_gripper_finger_link
+            </rosparam>
+        </node>
+
+        <node pkg="robot_self_filter" type="self_filter" respawn="true" name="laser3_self_filter" output="screen">
+            <remap from="cloud_in" to="/camera3/depth/points" />
+            <remap from="cloud_out" to="/scan_cloud_filtered" />
+
+            <!-- The frame of the sensor used to obtain the data to be
+              filtered; This parameter is optional. If it is not specified,
+              shadow points will be considered outside -->
+            <param name="sensor_frame" type="string" value="camera3_optical_frame" />
+
+            <param name="min_sensor_dist" type="double" value=".05"/>
+            <param name="self_see_default_padding" type="double" value=".05"/>
+            <param name="self_see_default_scale" type="double" value="1.0"/>
+            <rosparam>
+                self_see_links:
+                    - name: base_link
+                    - name: link_4
+                    - name: link_1
+                    - name: link_2
+                    - name: link_3
+                    - name: link_5
+                    - name: link_6
+                    - name: gripper_link
+                    - name: left_gripper_finger_link
+                    - name: right_gripper_finger_link
+            </rosparam>
+        </node>
+
+        <node pkg="robot_self_filter" type="self_filter" respawn="true" name="laser4_self_filter" output="screen">
+            <remap from="cloud_in" to="/camera4/depth/points" />
+            <remap from="cloud_out" to="/scan_cloud_filtered" />
+
+            <!-- The frame of the sensor used to obtain the data to be
+              filtered; This parameter is optional. If it is not specified,
+              shadow points will be considered outside -->
+            <param name="sensor_frame" type="string" value="camera4_optical_frame" />
+
+            <param name="min_sensor_dist" type="double" value=".05"/>
+            <param name="self_see_default_padding" type="double" value=".05"/>
+            <param name="self_see_default_scale" type="double" value="1.0"/>
+            <rosparam>
+                self_see_links:
+                    - name: base_link
+                    - name: link_4
+                    - name: link_1
+                    - name: link_2
+                    - name: link_3
+                    - name: link_5
+                    - name: link_6
+                    - name: gripper_link
+                    - name: left_gripper_finger_link
+                    - name: right_gripper_finger_link
+            </rosparam>
+        </node>
 </launch>

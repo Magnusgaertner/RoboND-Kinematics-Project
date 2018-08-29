@@ -101,8 +101,8 @@
           <camera>
               <horizontal_fov>1.2</horizontal_fov>
               <image>
-                  <width>100</width>
-                  <height>80</height>
+                  <width>50</width>
+                  <height>40</height>
                   <format>R8G8B8</format>
               </image>
               <depth_camera>
@@ -136,5 +136,137 @@
               </plugin>
       </sensor>
   </gazebo>
+
+    <gazebo reference="camera2_link">
+        <sensor type="depth" name="camera2">
+            <always_on>1</always_on>
+             <update_rate>30.0</update_rate>
+            <visualize>true</visualize>
+            <camera>
+                <horizontal_fov>2</horizontal_fov>
+                <image>
+                    <width>100</width>
+                    <height>50</height>
+                    <format>R8G8B8</format>
+                </image>
+                <depth_camera>
+                </depth_camera>
+                <clip>
+                    <near>0.1</near>
+                    <far>5</far>
+                </clip>
+            </camera>
+            <plugin name="camera2_controller" filename="libgazebo_ros_openni_kinect.so">
+                <alwaysOn>true</alwaysOn>
+                    <updateRate>30.0</updateRate>
+                    <cameraName>camera2</cameraName>
+                    <frameName>camera2_optical_frame</frameName>
+                <imageTopicName>rgb/image_raw</imageTopicName>
+                <depthImageTopicName>depth/image_raw</depthImageTopicName>
+                <pointCloudTopicName>depth/points</pointCloudTopicName>
+                <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
+                <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
+                <pointCloudCutoff>0.4</pointCloudCutoff>
+                    <hackBaseline>0.07</hackBaseline>
+                    <distortionK1>0.0</distortionK1>
+                    <distortionK2>0.0</distortionK2>
+                    <distortionK3>0.0</distortionK3>
+                    <distortionT1>0.0</distortionT1>
+                    <distortionT2>0.0</distortionT2>
+                <CxPrime>0.0</CxPrime>
+                <Cx>0.0</Cx>
+                <Cy>0.0</Cy>
+                <focalLength>0.0</focalLength>
+                </plugin>
+        </sensor>
+    </gazebo>
+
+     <gazebo reference="camera3_link">
+            <sensor type="depth" name="camera3">
+                <always_on>1</always_on>
+                 <update_rate>30.0</update_rate>
+                <visualize>true</visualize>
+                <camera>
+                    <horizontal_fov>2</horizontal_fov>
+                    <image>
+                        <width>100</width>
+                        <height>50</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <depth_camera>
+                    </depth_camera>
+                    <clip>
+                        <near>0.1</near>
+                        <far>5</far>
+                    </clip>
+                </camera>
+                <plugin name="camera3_controller" filename="libgazebo_ros_openni_kinect.so">
+                    <alwaysOn>true</alwaysOn>
+                        <updateRate>30.0</updateRate>
+                        <cameraName>camera3</cameraName>
+                        <frameName>camera3_optical_frame</frameName>
+                    <imageTopicName>rgb/image_raw</imageTopicName>
+                    <depthImageTopicName>depth/image_raw</depthImageTopicName>
+                    <pointCloudTopicName>depth/points</pointCloudTopicName>
+                    <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
+                    <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
+                    <pointCloudCutoff>0.4</pointCloudCutoff>
+                        <hackBaseline>0.07</hackBaseline>
+                        <distortionK1>0.0</distortionK1>
+                        <distortionK2>0.0</distortionK2>
+                        <distortionK3>0.0</distortionK3>
+                        <distortionT1>0.0</distortionT1>
+                        <distortionT2>0.0</distortionT2>
+                    <CxPrime>0.0</CxPrime>
+                    <Cx>0.0</Cx>
+                    <Cy>0.0</Cy>
+                    <focalLength>0.0</focalLength>
+                    </plugin>
+            </sensor>
+        </gazebo>
+
+             <gazebo reference="camera4_link">
+                    <sensor type="depth" name="camera4">
+                        <always_on>1</always_on>
+                         <update_rate>30.0</update_rate>
+                        <visualize>true</visualize>
+                        <camera>
+                            <horizontal_fov>1</horizontal_fov>
+                            <image>
+                                <width>100</width>
+                                <height>100</height>
+                                <format>R8G8B8</format>
+                            </image>
+                            <depth_camera>
+                            </depth_camera>
+                            <clip>
+                                <near>0.1</near>
+                                <far>6</far>
+                            </clip>
+                        </camera>
+                        <plugin name="camera4_controller" filename="libgazebo_ros_openni_kinect.so">
+                            <alwaysOn>true</alwaysOn>
+                                <updateRate>30.0</updateRate>
+                                <cameraName>camera4</cameraName>
+                                <frameName>camera4_optical_frame</frameName>
+                            <imageTopicName>rgb/image_raw</imageTopicName>
+                            <depthImageTopicName>depth/image_raw</depthImageTopicName>
+                            <pointCloudTopicName>depth/points</pointCloudTopicName>
+                            <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
+                            <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
+                            <pointCloudCutoff>0.4</pointCloudCutoff>
+                                <hackBaseline>0.07</hackBaseline>
+                                <distortionK1>0.0</distortionK1>
+                                <distortionK2>0.0</distortionK2>
+                                <distortionK3>0.0</distortionK3>
+                                <distortionT1>0.0</distortionT1>
+                                <distortionT2>0.0</distortionT2>
+                            <CxPrime>0.0</CxPrime>
+                            <Cx>0.0</Cx>
+                            <Cy>0.0</Cy>
+                            <focalLength>0.0</focalLength>
+                            </plugin>
+                    </sensor>
+                </gazebo>
 
 </robot>

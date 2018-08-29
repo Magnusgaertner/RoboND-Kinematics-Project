@@ -11,7 +11,7 @@ stomp/arm_group:
   task:
     noise_generator:
       - class: stomp_moveit/NormalDistributionSampling
-        stddev: [0.01, 0.01, 0.01, 0.01, 0.01, 0.01]
+        stddev: [0.2, 0.2 , 0.2, 0.1, 0.1, 0.1]
     cost_functions:
       - class: stomp_moveit/CollisionCheck
         collision_penalty: 1.0
