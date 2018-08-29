@@ -3,7 +3,7 @@ stomp/arm_group:
   optimization:
     num_timesteps: 20
     num_iterations: 20
-    num_iterations_after_valid: 10
+    num_iterations_after_valid: 0
     num_rollouts: 10
     max_rollouts: 10
     initialization_method: 1 #[1 : LINEAR_INTERPOLATION, 2 : CUBIC_POLYNOMIAL, 3 : MININUM_CONTROL_COST
@@ -11,7 +11,7 @@ stomp/arm_group:
   task:
     noise_generator:
       - class: stomp_moveit/NormalDistributionSampling
-        stddev: [0.2, 0.2, 0.2, 0.2, 0.2, 0.2]
+        stddev: [0.01, 0.01, 0.01, 0.01, 0.01, 0.01]
     cost_functions:
       - class: stomp_moveit/CollisionCheck
         collision_penalty: 1.0
