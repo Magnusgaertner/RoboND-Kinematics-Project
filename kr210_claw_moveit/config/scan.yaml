@@ -1,5 +1,5 @@
 sensors:
-  - sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
+  - sensor_plugin: moveit_map_monitor/PointCloudOctomapUpdater
     point_cloud_topic: /scan_cloud_filtered_
     max_range: 5.0
     point_subsample: 1
