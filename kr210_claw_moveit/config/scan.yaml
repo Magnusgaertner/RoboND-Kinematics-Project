@@ -1,5 +1,5 @@
 sensors:
-  - sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
+  - sensor_plugin: occupancy_map_monitor/PointCloudEsdfUpdater
     point_cloud_topic: /scan_cloud_filtered
     max_range: 5.0
     point_subsample: 1
