@@ -231,7 +231,7 @@
                          <update_rate>30.0</update_rate>
                         <visualize>true</visualize>
                         <camera>
-                            <horizontal_fov>1</horizontal_fov>
+                            <horizontal_fov>1.2</horizontal_fov>
                             <image>
                                 <width>100</width>
                                 <height>100</height>
@@ -241,7 +241,7 @@
                             </depth_camera>
                             <clip>
                                 <near>0.1</near>
-                                <far>6</far>
+                                <far>8</far>
                             </clip>
                         </camera>
                         <plugin name="camera4_controller" filename="libgazebo_ros_openni_kinect.so">
