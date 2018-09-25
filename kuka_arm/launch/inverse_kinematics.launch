@@ -1,4 +1,4 @@
 <launch>
-  <node name="stomp_trajectory_sampler" pkg="kuka_arm" type="stomp_trajectory_sampler">
-  </node>
+  <!--node name="stomp_trajectory_sampler" pkg="kuka_arm" type="stomp_trajectory_sampler">
+  </node-->
 </launch>
