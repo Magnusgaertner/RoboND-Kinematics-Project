@@ -55,8 +55,7 @@
         <!-- Set the display variable, in case OpenGL code is used internally -->
         <env name="DISPLAY" value="$(optenv DISPLAY :0)"/>
 
-        <remap from="/move_group_sensor_input" to="/camera4/depth/points"/>
-
+        <remap from="/move_group_sensor_input" to="/depth/points"/>
         <!--remap from="/move_group_sensor_input" to="/camera3/depth/points"/-->
         <!--remap from="/move_group_sensor_input" to="/camera2/depth/points"/-->
         <param name="collision_detector" value="my_checker"/>
@@ -64,7 +63,7 @@
 
         <!--remap from="/move_group/esdf_map_in" to="/voxblox_node/esdf_map_out"/>
         <remap from="/move_group/tsdf_map_in" to="/voxblox_node/tsdf_map_out"/-->
-        <param name="world_frame" value="base_footprint" />
+        <param name="voxblox/world_frame" value="base_footprint" />
 
         <!-- voxblox settings -->
 
@@ -77,7 +76,7 @@
         <param name="voxblox/publish_tsdf_info" value="true" />
         <param name="voxblox/use_tf_transforms" value="true" />
         <param name="voxblox/update_mesh_every_n_sec" value="0.1" />
-        <param name="voxblox/min_time_between_msgs_sec" value="0" />
+        <param name="voxblox/min_time_between_msgs_sec" value="-1" />
         <param name="voxblox/max_block_distance_from_body" value="10.0" />
         <param name="voxblox/max_integration_time_s" value="1" />
         <param name="voxblox/max_ray_length_m" value="10.0" />

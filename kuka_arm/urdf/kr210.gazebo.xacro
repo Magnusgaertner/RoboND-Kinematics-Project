@@ -119,7 +119,7 @@
                   <frameName>kinect_link_optical_frame</frameName>
               <imageTopicName>rgb/image_raw</imageTopicName>
               <depthImageTopicName>depth/image_raw</depthImageTopicName>
-              <pointCloudTopicName>depth/points</pointCloudTopicName>
+              <pointCloudTopicName>/depth/points</pointCloudTopicName>
               <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
               <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
               <pointCloudCutoff>0.4</pointCloudCutoff>
@@ -163,7 +163,7 @@
                     <frameName>camera2_optical_frame</frameName>
                 <imageTopicName>rgb/image_raw</imageTopicName>
                 <depthImageTopicName>depth/image_raw</depthImageTopicName>
-                <pointCloudTopicName>depth/points</pointCloudTopicName>
+                <pointCloudTopicName>/depth/points</pointCloudTopicName>
                 <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
                 <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
                 <pointCloudCutoff>0.4</pointCloudCutoff>
@@ -207,7 +207,7 @@
                         <frameName>camera3_optical_frame</frameName>
                     <imageTopicName>rgb/image_raw</imageTopicName>
                     <depthImageTopicName>depth/image_raw</depthImageTopicName>
-                    <pointCloudTopicName>depth/points</pointCloudTopicName>
+                    <pointCloudTopicName>/depth/points</pointCloudTopicName>
                     <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
                     <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
                     <pointCloudCutoff>0.4</pointCloudCutoff>
@@ -251,7 +251,7 @@
                                 <frameName>camera4_optical_frame</frameName>
                             <imageTopicName>rgb/image_raw</imageTopicName>
                             <depthImageTopicName>depth/image_raw</depthImageTopicName>
-                            <pointCloudTopicName>depth/points</pointCloudTopicName>
+                            <pointCloudTopicName>/depth/points</pointCloudTopicName>
                             <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
                             <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
                             <pointCloudCutoff>0.4</pointCloudCutoff>
