@@ -13,7 +13,7 @@ roslaunch kuka_arm target_description.launch;\
 exec /bin/bash -i'" --tab -e "/bin/bash -c \
 
 'sleep 3;\
-roslaunch kuka_arm cafe.launch;\
+env CPUPROFILE=/tmp/cafe.prof LD_PRELOAD=/usr/lib/libprofiler.so.0 roslaunch kuka_arm cafe.launch;\
 exec /bin/bash -i'" --tab -e "/bin/bash -c \
 
 'sleep 3;\

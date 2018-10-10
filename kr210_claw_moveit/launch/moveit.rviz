@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /MotionPlanning1
+        - /MotionPlanning1/Planning Request1
         - /PointCloud21
         - /VoxbloxMesh1
       Splitter Ratio: 0.742560029
@@ -45,7 +46,7 @@ Visualization Manager:
       MoveIt_Allow_External_Program: false
       MoveIt_Goal_Tolerance: 0
       MoveIt_Planning_Attempts: 10
-      MoveIt_Planning_Time: 5
+      MoveIt_Planning_Time: 60
       MoveIt_Use_Constraint_Aware_IK: false
       MoveIt_Warehouse_Host: 127.0.0.1
       MoveIt_Warehouse_Port: 33829
@@ -178,7 +179,7 @@ Visualization Manager:
         Joint Violation Color: 255; 0; 255
         Planning Group: arm_group
         Query Goal State: true
-        Query Start State: false
+        Query Start State: true
         Show Workspace: false
         Start State Alpha: 1
         Start State Color: 0; 255; 0
@@ -325,6 +326,22 @@ Visualization Manager:
       Topic: /move_group/voxblox/mesh
       Unreliable: false
       Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /stomp_trajectories
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /move_group/stomp_trajectory
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -356,10 +373,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.454797387
+      Pitch: 1.15979695
       Target Frame: base_footprint
       Value: XYOrbit (rviz)
-      Yaw: 2.16178656
+      Yaw: 3.16679764
     Saved: ~
 Window Geometry:
   Displays:
