@@ -5,6 +5,15 @@
     <!-- Bachelor Thesis common settings -->
     <arg name="debug" default="false"/>
     <arg name="planner" default="stomp"/>
+    <!--to profile do
+     LD_PRELOAD=/usr/lib/libprofiler.so CPUPROFILE=/tmp/geany.prof executable
+
+     env CPUPROFILE=/tmp/my_executable.prof LD_PRELOAD=/usr/lib/libprofiler.so.0 roslaunch dvs_tracking slam_ros.launch
+     https://github.com/ethz-asl/programming_guidelines/wiki/Profiling-Code
+     google-pprof - -pdf /home/odroid/catkin_ws/devel/lib/PATH_TO_EXECUTABLE  /tmp/my_executable.prof_PID > profile.pdf
+
+
+     -->
 
     <!-- GDB Debug Option -->
     <!--arg name="debug" default="false"/-->
