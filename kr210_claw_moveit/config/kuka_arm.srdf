@@ -46,6 +46,134 @@
     </group_state>
 
 
+
+  <group_state name="1_1" group="arm_group">
+    <joint name="joint_1" value="0.405590817251" />
+    <joint name="joint_2" value="0.625886834539" />
+    <joint name="joint_3" value="-1.18976191606" />
+    <joint name="joint_4" value="-0.676793807508" />
+    <joint name="joint_5" value="0.681505578426" />
+    <joint name="joint_6" value="0.557816610018" />
+  </group_state>
+
+  <group_state name="1_2" group="arm_group">
+    <joint name="joint_1" value="-0.00711642328014" />
+    <joint name="joint_2" value="0.380155767964" />
+    <joint name="joint_3" value="-0.833458710041" />
+    <joint name="joint_4" value="0.0162931993608" />
+    <joint name="joint_5" value="0.45335701429" />
+    <joint name="joint_6" value="-0.0146533660121" />
+  </group_state>
+
+  <group_state name="1_3" group="arm_group">
+    <joint name="joint_1" value="-0.389394924413" />
+    <joint name="joint_2" value="0.599548664752" />
+    <joint name="joint_3" value="-1.14889117757" />
+    <joint name="joint_4" value="0.666119342216" />
+    <joint name="joint_5" value="0.661593577884" />
+    <joint name="joint_6" value="-0.555097049372" />
+  </group_state>
+
+  <group_state name="2_1" group="arm_group">
+    <joint name="joint_1" value="0.418191010441" />
+    <joint name="joint_2" value="0.452610037238" />
+    <joint name="joint_3" value="-0.402436199411" />
+    <joint name="joint_4" value="-1.68317618856" />
+    <joint name="joint_5" value="0.42099436225" />
+    <joint name="joint_6" value="1.69381918077" />
+  </group_state>
+
+  <group_state name="2_2" group="arm_group">
+    <joint name="joint_1" value="-0.019551873153" />
+    <joint name="joint_2" value="0.29530431508" />
+    <joint name="joint_3" value="-0.136412973639" />
+    <joint name="joint_4" value="-3.26467850139" />
+    <joint name="joint_5" value="0.160080262011" />
+    <joint name="joint_6" value="3.26311454599" />
+  </group_state>
+
+  <group_state name="2_3" group="arm_group">
+    <joint name="joint_1" value="-0.392715446672" />
+    <joint name="joint_2" value="0.65274343667" />
+    <joint name="joint_3" value="-0.110372531555" />
+    <joint name="joint_4" value="-3.81789380135" />
+    <joint name="joint_5" value="0.657896313961" />
+    <joint name="joint_6" value="3.70738083845" />
+  </group_state>
+
+  <group_state name="3_1" group="arm_group">
+    <joint name="joint_1" value="0.673263148072" />
+    <joint name="joint_2" value="1.23497219346" />
+    <joint name="joint_3" value="-0.70363518809" />
+    <joint name="joint_4" value="-2.1367703429" />
+    <joint name="joint_5" value="0.831162708867" />
+    <joint name="joint_6" value="2.32663072047" />
+  </group_state>
+
+  <group_state name="3_2" group="arm_group">
+    <joint name="joint_1" value="0.813218423836" />
+    <joint name="joint_2" value="0.625491385343" />
+    <joint name="joint_3" value="-1.16056734753" />
+    <joint name="joint_4" value="-2.97482169085" />
+    <joint name="joint_5" value="0.916455170248" />
+    <joint name="joint_6" value="2.2346432325" />
+  </group_state>
+
+  <group_state name="3_3" group="arm_group">
+    <joint name="joint_1" value="-0.135871727213" />
+    <joint name="joint_2" value="-0.0842458274751" />
+    <joint name="joint_3" value="-0.281981301704" />
+    <joint name="joint_4" value="-0.0287664050081" />
+    <joint name="joint_5" value="-1.02408324051" />
+    <joint name="joint_6" value="0.148624407509" />
+  </group_state>
+
+  <group_state name="sl1" group="arm_group">
+    <joint name="joint_1" value="1.56618851885" />
+    <joint name="joint_2" value="0.0281128264902" />
+    <joint name="joint_3" value="-0.71583661575" />
+    <joint name="joint_4" value="0.0534814363706" />
+    <joint name="joint_5" value="0.697188917019" />
+    <joint name="joint_6" value="-0.0511679937508" />
+  </group_state>
+
+  <group_state name="sl2" group="arm_group">
+    <joint name="joint_1" value="1.55538692652" />
+    <joint name="joint_2" value="-0.381568036355" />
+    <joint name="joint_3" value="0.178682308391" />
+    <joint name="joint_4" value="0.211502696253" />
+    <joint name="joint_5" value="0.216334642516" />
+    <joint name="joint_6" value="-0.216959418878" />
+  </group_state>
+
+  <group_state name="sl3" group="arm_group">
+    <joint name="joint_1" value="1.54966012053" />
+    <joint name="joint_2" value="-0.318925028649" />
+    <joint name="joint_3" value="0.651363391739" />
+    <joint name="joint_4" value="2.98340637344" />
+    <joint name="joint_5" value="0.327485828673" />
+    <joint name="joint_6" value="-3.00198806619" />
+  </group_state>
+
+  <group_state name="sl4" group="arm_group">
+    <joint name="joint_1" value="1.52175291562" />
+    <joint name="joint_2" value="-0.554446623014" />
+    <joint name="joint_3" value="1.11798645103" />
+    <joint name="joint_4" value="-2.46113263767" />
+    <joint name="joint_5" value="-0.0915636406473" />
+    <joint name="joint_6" value="2.40860657805" />
+  </group_state>
+
+  <group_state name="sl5" group="arm_group">
+    <joint name="joint_1" value="1.53358342424" />
+    <joint name="joint_2" value="0.340134306848" />
+    <joint name="joint_3" value="0.924557773887" />
+    <joint name="joint_4" value="-3.21109753497" />
+    <joint name="joint_5" value="-1.82798299228" />
+    <joint name="joint_6" value="3.13067866767" />
+  </group_state>
+
+
     <group_state name="closed_pose" group="gripper_group">
         <joint name="left_gripper_finger_joint" value="0.06" />
         <joint name="right_gripper_finger_joint" value="0.06" />

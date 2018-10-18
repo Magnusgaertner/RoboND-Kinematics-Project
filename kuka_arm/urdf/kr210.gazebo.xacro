@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <robot>
 
   <!-- Link0 -->
@@ -94,7 +93,7 @@
   </gazebo>
 
   <gazebo reference="kinect_link">
-      <sensor type="depth" name="camera">
+      <sensor type="depth" name="camera1">
           <always_on>1</always_on>
            <update_rate>30.0</update_rate>
           <visualize>true</visualize>
@@ -112,10 +111,10 @@
                   <far>3</far>
               </clip>
           </camera>
-          <plugin name="camera_controller" filename="libgazebo_ros_openni_kinect.so">
+          <plugin name="camera2_controller" filename="libgazebo_ros_openni_kinect.so">
               <alwaysOn>true</alwaysOn>
                   <updateRate>30.0</updateRate>
-                  <cameraName>camera</cameraName>
+                  <cameraName>camera1</cameraName>
                   <frameName>kinect_link_optical_frame</frameName>
               <imageTopicName>rgb/image_raw</imageTopicName>
               <depthImageTopicName>depth/image_raw</depthImageTopicName>
