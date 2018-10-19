@@ -147,12 +147,12 @@
   </group_state>
 
   <group_state name="sl3" group="arm_group">
-    <joint name="joint_1" value="1.54966012053" />
-    <joint name="joint_2" value="-0.318925028649" />
-    <joint name="joint_3" value="0.651363391739" />
-    <joint name="joint_4" value="2.98340637344" />
-    <joint name="joint_5" value="0.327485828673" />
-    <joint name="joint_6" value="-3.00198806619" />
+    <joint name="joint_1" value="1.55105959212" />
+    <joint name="joint_2" value="-0.353268335442" />
+    <joint name="joint_3" value="0.684442574376" />
+    <joint name="joint_4" value="0.190010219127" />
+    <joint name="joint_5" value="0.200350578179" />
+    <joint name="joint_6" value="-0.219649675533" />
   </group_state>
 
   <group_state name="sl4" group="arm_group">

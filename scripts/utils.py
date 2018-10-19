@@ -60,6 +60,12 @@ def start_moveit_with_handle():
   time.sleep(10)
 
 
+def set_octomap_resolution(size):
+  kill_movegroup()
+  if size > 1:
+    set_param("octomap_resolution", float(size)/100, '/home/magnus/kr210_ws/src/RoboND-Kinematics-Project/kr210_claw_moveit/launch/sensor_manager.launch.xml')
+  else:
+    set_param("octomap_resolution", size, '/home/magnus/kr210_ws/src/RoboND-Kinematics-Project/kr210_claw_moveit/launch/sensor_manager.launch.xml')
 
 
 def set_voxelsize(size):
@@ -69,15 +75,20 @@ def set_voxelsize(size):
   else:
     set_move_group_param("voxblox/tsdf_voxel_size", size)
 
-def set_move_group_param(name, value):
-  kill_movegroup()
-  path = '/home/magnus/kr210_ws/src/RoboND-Kinematics-Project/' \
-         'kr210_claw_moveit/launch/move_group.launch'
+
+def set_param(name, value, path):
   config = etree.parse(path)
   entry = config.find(".//param[@name='" + str(name) + "']")
   entry.attrib['value'] = str(value)
   config.write(path)
   print(str(name) + ": " + str(value))
+
+
+def set_move_group_param(name, value):
+  kill_movegroup()
+  path = '/home/magnus/kr210_ws/src/RoboND-Kinematics-Project/' \
+         'kr210_claw_moveit/launch/move_group.launch'
+  set_param(name, value, path)
 
 
 def set_move_group_arg(name, value):
@@ -132,14 +143,24 @@ def set_simulation_cameras_enabled(enabled):
   gazebo_config.write(path)
 
 
-def load_map(path):
+def set_esdf_enabled():
+  kill_gazebo()
+  set_move_group_param("load_octomap_monitor", "false")
+
+
+def set_octomap_enabled():
+  kill_gazebo()
+  set_move_group_param("load_octomap_monitor", "true")
+
+
+def load_map(path, type='vxblxx'):
   rospy.wait_for_service('/move_group/load_map', timeout=30)
-  rospy.ServiceProxy('/move_group/load_map', moveit_msgs.srv.LoadMap)('voxblox_map_voxblox_' + str(path) + 'cm.vxblx')
+  rospy.ServiceProxy('/move_group/load_map', moveit_msgs.srv.LoadMap)(type + "_" + str(path) + 'cm.' + type)
+
 
 def save_map(path):
   rospy.wait_for_service('/move_group/save_map',timeout=30)
-  rospy.ServiceProxy('/move_group/save_map', moveit_msgs.srv.SaveMap)('voxblox_map_voxblox_' + str(path) + 'cm.vxblx')
-
+  rospy.ServiceProxy('/move_group/save_map', moveit_msgs.srv.SaveMap)(type + "_" + str(path) + 'cm.' + type)
 
 
 def get_out():
@@ -156,16 +177,15 @@ def clear_map():
 
 def pause_gazebo():
   try:
-    pause = rospy.ServiceProxy('/gazebo/pause_physics "{}"', srv.Empty)
+    pause = rospy.ServiceProxy('/gazebo/pause_physics', srv.Empty)
     pause()
   except rospy.ServiceException, e:
     print(e)
 
 
-
 def unpause_gazebo():
   try:
-    unpause = rospy.ServiceProxy('/gazebo/unpause_physics "{}"', srv.Empty)
+    unpause = rospy.ServiceProxy('/gazebo/unpause_physics', srv.Empty)
     unpause()
   except rospy.ServiceException, e:
     print(e)

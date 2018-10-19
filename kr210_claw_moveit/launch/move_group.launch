@@ -4,7 +4,7 @@
 
     <!-- Bachelor Thesis common settings -->
     <arg name="debug" default="false"/>
-    <arg name="planner" default="stomp"/>
+    <arg name="planner" default="ompl"/>
     <!--to profile do
      LD_PRELOAD=/usr/lib/libprofiler.so CPUPROFILE=/tmp/geany.prof executable
 
@@ -18,11 +18,8 @@
     <!-- GDB Debug Option -->
     <!--arg name="debug" default="false"/-->
     <arg unless="$(arg debug)" name="launch_prefix" value=""/>
-
-
-         <!--"terminator -mx valgrind - -tool=callgrind - -callgrind-out-file=callgrind.out.node_name.%p"/-->
-    <arg if="$(arg debug)" name="launch_prefix"
-         value="gdb -x $(find kr210_claw_moveit)/launch/gdb_settings.gdb --ex run --args"/>
+    <!-- valgrind - -tool=callgrind - -callgrind-out-file='callgrind.move_group.%p' - -vgdb=yes - -vgdb-error=0"/-->
+    <arg if="$(arg debug)" name="launch_prefix" value="gdb -x $(find kr210_claw_moveit)/launch/gdb_settings.gdb --ex run --args"/>
 
     <!-- Verbose Mode Option -->
     <arg name="info" default="$(arg debug)"/>
@@ -45,22 +42,19 @@
     </include>
 
     <!-- Trajectory Execution Functionality -->
-    <include ns="move_group" file="$(find kr210_claw_moveit)/launch/trajectory_execution.launch.xml"
-             if="$(arg allow_trajectory_execution)">
+    <include ns="move_group" file="$(find kr210_claw_moveit)/launch/trajectory_execution.launch.xml" if="$(arg allow_trajectory_execution)">
         <arg name="moveit_manage_controllers" value="true"/>
         <arg name="moveit_controller_manager" value="kuka_arm" unless="$(arg fake_execution)"/>
         <arg name="moveit_controller_manager" value="fake" if="$(arg fake_execution)"/>
     </include>
 
     <!-- Sensors Functionality -->
-    <include ns="move_group" file="$(find kr210_claw_moveit)/launch/sensor_manager.launch.xml"
-             if="$(arg allow_trajectory_execution)">
+    <include ns="move_group" file="$(find kr210_claw_moveit)/launch/sensor_manager.launch.xml" if="$(arg allow_trajectory_execution)">
         <arg name="moveit_sensor_manager" value="kuka_arm"/>
     </include>
 
     <!-- Start the actual move_group node/action server -->
-    <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_move_group" type="move_group"
-          respawn="false" output="screen" args="joint_states:=/kuka_arm/joint_states $(arg command_args)">
+    <node name="move_group" launch-prefix="$(arg launch_prefix)" pkg="moveit_ros_move_group" type="move_group" respawn="false" output="screen" args="joint_states:=/kuka_arm/joint_states $(arg command_args)">
         <!-- Set the display variable, in case OpenGL code is used internally -->
         <env name="DISPLAY" value="$(optenv DISPLAY :0)"/>
 
@@ -68,7 +62,7 @@
         <!--remap from="/move_group_sensor_input" to="/camera3/depth/points"/-->
         <!--remap from="/move_group_sensor_input" to="/camera2/depth/points"/-->
         <param name="collision_detector" value="my_checker"/>
-        <param name="load_octomap_monitor" value="false"/>
+        <param name="load_octomap_monitor" value="true"/>
 
         <!--remap from="/move_group/esdf_map_in" to="/voxblox_node/esdf_map_out"/>
         <remap from="/move_group/tsdf_map_in" to="/voxblox_node/tsdf_map_out"/-->
@@ -76,7 +70,7 @@
 
         <!-- voxblox settings -->
 
-        <param name="voxblox/tsdf_voxel_size" value="0.1"/>
+        <param name="voxblox/tsdf_voxel_size" value="0.05"/>
         <param name="voxblox/tsdf_voxels_per_side" value="16"/>
         <param name="voxblox/voxel_carving_enabled" value="true"/>
         <param name="voxblox/color_mode" value="lambert"/>
