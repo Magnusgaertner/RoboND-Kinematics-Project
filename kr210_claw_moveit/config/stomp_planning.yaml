@@ -7,7 +7,7 @@ stomp/arm_group:
     num_rollouts: 50
     max_rollouts: 120
     initialization_method: 1 #[1 : LINEAR_INTERPOLATION, 2 : CUBIC_POLYNOMIAL, 3 : MININUM_CONTROL_COST
-    control_cost_weight: 0.2
+    control_cost_weight: 0.6
   task:
     noise_generator:
     - class: stomp_moveit/NormalDistributionSampling
@@ -25,7 +25,7 @@ stomp/arm_group:
       kernel_window_percentage: 0.2
       longest_valid_joint_move: 0.03
     - class: stomp_moveit/ObstacleDistanceGradient
-      max_distance: 0.3
+      max_distance: 0.2
       cost_weight: 1.0
       longest_valid_joint_move: 0.03
     noisy_filters:

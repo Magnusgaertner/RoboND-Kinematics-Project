@@ -153,7 +153,7 @@ def set_octomap_enabled():
   set_move_group_param("load_octomap_monitor", "true")
 
 
-def load_map(path, type='vxblxx'):
+def load_map(path, type='vxblx'):
   rospy.wait_for_service('/move_group/load_map', timeout=30)
   rospy.ServiceProxy('/move_group/load_map', moveit_msgs.srv.LoadMap)(type + "_" + str(path) + 'cm.' + type)
 
