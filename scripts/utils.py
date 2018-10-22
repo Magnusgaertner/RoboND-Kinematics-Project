@@ -17,7 +17,7 @@ import psutil
 import signal
 import time
 
-
+import yaml
 
 
 terminal_session = None
@@ -146,11 +146,22 @@ def set_simulation_cameras_enabled(enabled):
 def set_esdf_enabled():
   kill_gazebo()
   set_move_group_param("load_octomap_monitor", "false")
+  with open("/home/magnus/kr210_ws/src/RoboND-Kinematics-Project/kr210_claw_moveit/config/scan.yaml", "rw") as  file_open:
+    data = yaml.load(file_open)
+    data['sensors'][0]['sensor_plugin'] = "occupancy_map_monitor/PointCloudEsdfUpdater"
+    yaml.dump(data, file_open)
 
 
 def set_octomap_enabled():
   kill_gazebo()
   set_move_group_param("load_octomap_monitor", "true")
+  with open("/home/magnus/kr210_ws/src/RoboND-Kinematics-Project/kr210_claw_moveit/config/scan.yaml", "r") as file_open:
+    data = yaml.load(file_open)
+
+  data['sensors'][0]['sensor_plugin'] = "occupancy_map_monitor/PointCloudOctomapUpdater"
+  with open("/home/magnus/kr210_ws/src/RoboND-Kinematics-Project/kr210_claw_moveit/config/scan.yaml",
+            "w") as  file_open:
+    yaml.dump(data, file_open)
 
 
 def load_map(path, type='vxblx'):
@@ -158,7 +169,7 @@ def load_map(path, type='vxblx'):
   rospy.ServiceProxy('/move_group/load_map', moveit_msgs.srv.LoadMap)(type + "_" + str(path) + 'cm.' + type)
 
 
-def save_map(path):
+def save_map(path,type='vxblx'):
   rospy.wait_for_service('/move_group/save_map',timeout=30)
   rospy.ServiceProxy('/move_group/save_map', moveit_msgs.srv.SaveMap)(type + "_" + str(path) + 'cm.' + type)
 
@@ -172,14 +183,14 @@ def clear_map():
   try:
     clear = rospy.ServiceProxy('/move_group/voxblox/clear_map', srv.Empty)
     clear()
-  except rospy.ServiceException, e:
+  except rospy.ServiceException as e:
     print(e)
 
 def pause_gazebo():
   try:
     pause = rospy.ServiceProxy('/gazebo/pause_physics', srv.Empty)
     pause()
-  except rospy.ServiceException, e:
+  except rospy.ServiceException as e:
     print(e)
 
 
@@ -187,7 +198,7 @@ def unpause_gazebo():
   try:
     unpause = rospy.ServiceProxy('/gazebo/unpause_physics', srv.Empty)
     unpause()
-  except rospy.ServiceException, e:
+  except rospy.ServiceException as e:
     print(e)
 
 

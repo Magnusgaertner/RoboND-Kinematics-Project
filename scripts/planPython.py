@@ -86,7 +86,7 @@ def execute_saved_plans(name):
   i = 0
   try:
     while True:
-      file_path = os.path.join(os.path.expanduser('~'), 'saved_trajectories', str(name) + "_" + str(i) + '.yaml')
+      file_path = os.path.join(os.path.expanduser('~'), 'kr210_ws', 'src','RoboND-Kinematics-Project','saved_trajectories', str(name) + "_" + str(i) + '.yaml')
       if not os.path.exists(file_path):
         return
       with open(file_path, 'r') as file_open:
