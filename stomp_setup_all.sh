@@ -16,7 +16,15 @@ exec /bin/bash -i'" --tab -e "/bin/bash -c \
 roslaunch kuka_arm cafe.launch;\
 exec /bin/bash -i'" --tab -e "/bin/bash -c \
 
-'sleep 3;\
+'sleep 2;\
+roslaunch swri_profiler profiler.launch;\
+exec /bin/bash -i'" --tab -e "/bin/bash -c \
+
+'sleep 2;\
 roslaunch kuka_arm inverse_kinematics.launch;\
+exec /bin/bash -i'" --tab -e "/bin/bash -c \
+
+'sleep 3;\
+rosbag record /profiler/data /profiler/index /rosout_agg;\
 exec /bin/bash -i'" 
 # env CPUPROFILE=/tmp/cafe.prof LD_PRELOAD=/usr/lib/libprofiler.so.0 
