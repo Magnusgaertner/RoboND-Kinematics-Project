@@ -22,4 +22,4 @@ time.sleep(30)
 after = utils.get_move_group_ram_usage()
 print(after-before)
 
-utils.save_map(datetime.datetime.now().strftime("%m-%d_%H%M")+".vxblx")
+utils.save_map(datetime.datetime.now().strftime("%m-%d_%H%M")+"_1","vxblx")

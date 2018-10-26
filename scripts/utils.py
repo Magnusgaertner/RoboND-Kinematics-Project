@@ -146,9 +146,12 @@ def set_simulation_cameras_enabled(enabled):
 def set_esdf_enabled():
   kill_gazebo()
   set_move_group_param("load_octomap_monitor", "false")
-  with open("/home/magnus/kr210_ws/src/RoboND-Kinematics-Project/kr210_claw_moveit/config/scan.yaml", "rw") as  file_open:
+  with open("/home/magnus/kr210_ws/src/RoboND-Kinematics-Project/kr210_claw_moveit/config/scan.yaml", "r") as file_open:
     data = yaml.load(file_open)
-    data['sensors'][0]['sensor_plugin'] = "occupancy_map_monitor/PointCloudEsdfUpdater"
+
+  data['sensors'][0]['sensor_plugin'] = "occupancy_map_monitor/PointCloudEsdfUpdater"
+  with open("/home/magnus/kr210_ws/src/RoboND-Kinematics-Project/kr210_claw_moveit/config/scan.yaml",
+            "w") as  file_open:
     yaml.dump(data, file_open)
 
 
@@ -166,12 +169,12 @@ def set_octomap_enabled():
 
 def load_map(path, type='vxblx'):
   rospy.wait_for_service('/move_group/load_map', timeout=30)
-  rospy.ServiceProxy('/move_group/load_map', moveit_msgs.srv.LoadMap)(type + "_" + str(path) + 'cm.' + type)
+  rospy.ServiceProxy('/move_group/load_map', moveit_msgs.srv.LoadMap)('maps_for_planning/' + type + "_" + str(path) + 'cm.' + type)
 
 
 def save_map(path,type='vxblx'):
   rospy.wait_for_service('/move_group/save_map',timeout=30)
-  rospy.ServiceProxy('/move_group/save_map', moveit_msgs.srv.SaveMap)(type + "_" + str(path) + 'cm.' + type)
+  rospy.ServiceProxy('/move_group/save_map', moveit_msgs.srv.SaveMap)('maps_for_planning/' + type + "_" + str(path) + 'cm.' + type)
 
 
 def get_out():
