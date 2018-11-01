@@ -2,7 +2,7 @@ kuka_arm:
     #list of controllers
     joint_state_controller:
       type: joint_state_controller/JointStateController
-      publish_rate: 50
+      publish_rate: 200
 
     #r_gripper_controller:
       #type: "position_controllers/JointPositionController"
@@ -51,6 +51,6 @@ kuka_arm:
       constraints:
         goal_time: 10.0                  # Override default
 
-      state_publish_rate:  50            # Override default
+      state_publish_rate:  200            # Override default
       action_monitor_rate: 30            # Override default
       stop_trajectory_duration: 0        # Override default

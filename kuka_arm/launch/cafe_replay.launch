@@ -21,7 +21,7 @@
 
   <!--tf between world and base_footprint YPR-->
   <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster"
-    args="0.0 0.0 0.0 0 0 0 world base_footprint 100" />
+    args="0.0 0.0 0.0 0 0 0 world base_footprint 200" />
 
   <!--rviz-->
   <node name="$(anon rviz)" pkg="rviz" type="rviz" respawn="false"
