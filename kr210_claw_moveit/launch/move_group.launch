@@ -70,13 +70,13 @@
 
         <!-- voxblox settings -->
 
-        <param name="voxblox/tsdf_voxel_size" value="0.1"/>
+        <param name="voxblox/tsdf_voxel_size" value="0.05"/>
         <param name="voxblox/tsdf_voxels_per_side" value="16"/>
         <param name="voxblox/voxel_carving_enabled" value="false"/>
         <param name="voxblox/color_mode" value="lambert"/>
         <param name="voxblox/publish_tsdf_map" value="true"/>
         <param name="voxblox/publish_esdf_map" value="true"/>
-        <param name="voxblox/publish_tsdf_info" value="true"/><!-- big performance issue if enabled-->
+        <param name="voxblox/publish_tsdf_info" value="false"/><!-- big performance issue if enabled-->
         <param name="voxblox/use_tf_transforms" value="true"/>
         <param name="voxblox/update_mesh_every_n_sec" value="300.0"/>
         <param name="voxblox/min_time_between_msgs_sec" value="0"/>
@@ -90,13 +90,14 @@
         <param name="voxblox/esdf_max_distance_m" value="1.0"/>
         <param name="voxblox/esdf_default_distance_m" value="1.0"/>
         <param name="voxblox/esdf_min_diff_m" value="0.001"/>
-        <param name="voxblox/convert_to_octree" value="false"/><!-- big performance issue if enabled-->
+        <param name="voxblox/convert_to_octree" value="true"/><!-- big performance issue if enabled-->
         <!--remap from="transform" to="/kinect/vrpn_client/estimated_transform" /-->
         <!--rosparam file="$(find voxblox_ros)/cfg/cow_and_lady.yaml"/-->
         <param name="voxblox/mesh_filename" value="$(find voxblox_ros)/mesh_results/$(anon argo).ply"/>
 
-        <param name="voxblox/esdf_update_policy" value="none"/> <!-- none, timed, on_integration-->
+        <param name="voxblox/esdf_update_policy" value="timed"/> <!-- none, timed, on_integration-->
         <param name="voxblox/update_esdf_every_n_scans" value="8"/><!-- only valid for update policy on_integration-->
+        <param name="voxblox/esdf_update_rate" value="0.3"/><!-- only valid for update policy timed-->
         <param name="wait_at_start" value="true"/>
 
         <param name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>

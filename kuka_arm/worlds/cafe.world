@@ -59,6 +59,38 @@
         <kinematic>0</kinematic>
       </link>
     </model>
+        <model name='wall_behind'>
+          <static>1</static>
+          <link name='wall_link'>
+            <collision name='collision'>
+              <geometry>
+                <plane>
+                  <normal>0 0 1</normal>
+                  <size>5 10</size>
+                </plane>
+              </geometry>
+
+
+            </collision>
+            <visual name='visual'>
+              <cast_shadows>0</cast_shadows>
+              <geometry>
+                <plane>
+                  <normal>0 0 1</normal>
+                  <size>5 10</size>
+                </plane>
+              </geometry>
+              <material>
+                <script>
+                  <uri>file://media/materials/scripts/gazebo.material</uri>
+                  <name>Gazebo/Grey</name>
+                </script>
+              </material>
+            </visual>
+            <self_collide>0</self_collide>
+            <kinematic>0</kinematic>
+          </link>
+        </model>
     <gravity>0 0 -9.8</gravity>
     <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
     <atmosphere type='adiabatic'/>
@@ -99,6 +131,16 @@
         <scale>1 1 1</scale>
         <link name='link'>
           <pose frame=''>0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='wall_behind'>
+        <pose frame=''>5 0 2.5 0 -1.57 0</pose>
+        <scale>1 1 1</scale>
+        <link name='wall_link'>
+          <pose frame=''>5 0 2.5 0 -1.57 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>

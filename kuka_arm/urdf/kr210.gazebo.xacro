@@ -100,8 +100,8 @@
           <camera>
               <horizontal_fov>1.2</horizontal_fov>
               <image>
-                  <width>25</width>
-                  <height>20</height>
+                  <width>50</width>
+                  <height>40</height>
                   <format>R8G8B8</format>
               </image>
               <depth_camera>
