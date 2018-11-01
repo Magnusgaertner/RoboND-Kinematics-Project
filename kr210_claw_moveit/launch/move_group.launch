@@ -62,10 +62,8 @@
         <!--remap from="/move_group_sensor_input" to="/camera3/depth/points"/-->
         <!--remap from="/move_group_sensor_input" to="/camera2/depth/points"/-->
         <param name="collision_detector" value="my_checker"/>
-        <param name="load_octomap_monitor" value="false"/>
-
-        <!--remap from="/move_group/esdf_map_in" to="/voxblox_node/esdf_map_out"/>
-        <remap from="/move_group/tsdf_map_in" to="/voxblox_node/tsdf_map_out"/-->
+        <!--param name="load_octomap_monitor" value="false"/--> <!-- not used anymore-->
+        <param name="map_type" value="esdf"/><!-- esdf, octomap, none default: none-->
         <param name="voxblox/world_frame" value="base_footprint"/>
 
         <!-- voxblox settings -->
