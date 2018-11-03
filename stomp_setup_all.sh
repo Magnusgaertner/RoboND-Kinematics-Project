@@ -13,7 +13,11 @@ roslaunch kuka_arm target_description.launch;\
 exec /bin/bash -i'" --tab -e "/bin/bash -c \
 
 'sleep 3;\
-roslaunch kuka_arm cafe.launch;\
+roslaunch kuka_arm gazebo.launch;\
+exec /bin/bash -i'" --tab -e "/bin/bash -c \
+
+'sleep 3;\
+env CPUPROFILE=/tmp/wtf.prof LD_PRELOAD=/usr/lib/libprofiler.so.0 roslaunch kuka_arm cafe_replay.launch;\
 exec /bin/bash -i'" --tab -e "/bin/bash -c \
 
 'sleep 2;\
@@ -27,4 +31,4 @@ exec /bin/bash -i'" --tab -e "/bin/bash -c \
 'sleep 3;\
 rosbag record /profiler/data /profiler/index /rosout_agg;\
 exec /bin/bash -i'" 
-# env CPUPROFILE=/tmp/cafe.prof LD_PRELOAD=/usr/lib/libprofiler.so.0 
+# 

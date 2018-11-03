@@ -1,5 +1,5 @@
 sensors:
 - {filter_pointcloud: true, filtered_cloud_topic: filtered_cloud, freespace_cloud_topic: freespace_cloud,
-  max_range: 5.0, padding_offset: 0.02, padding_scale: 1.0, point_cloud_topic: /move_group_sensor_input,
+  max_range: 5.0, padding_offset: 0.03, padding_scale: 1.1, point_cloud_topic: /move_group_sensor_input,
   point_subsample: 1, sensor_plugin: occupancy_map_monitor/PointCloudEsdfUpdater,
-  use_freespace_pointcloud: true}
+  use_freespace_pointcloud: false}
