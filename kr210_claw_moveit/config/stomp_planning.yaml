@@ -2,31 +2,31 @@ stomp/arm_group:
   group_name: arm_group
   optimization:
     num_timesteps: 10
-    num_iterations: 50
-    num_iterations_after_valid: 0
-    num_rollouts: 50
+    num_iterations: 200
+    num_iterations_after_valid: 3
+    num_rollouts: 10
     max_rollouts: 120
     initialization_method: 1 #[1 : LINEAR_INTERPOLATION, 2 : CUBIC_POLYNOMIAL, 3 : MININUM_CONTROL_COST
-    control_cost_weight: 0.6
+    control_cost_weight: 0.0
   task:
     noise_generator:
     - class: stomp_moveit/NormalDistributionSampling
       stddev:
       - 0.39
-      - 1.152
-      - 0.7020000000000001
+      - 0.6
+      - 0.6
       - 0.40700000000000003
       - 0.244
       - 0.23750000000000002
     cost_functions:
     - class: stomp_moveit/CollisionCheck
-      collision_penalty: 1.0
+      collision_penalty: 2.0
       cost_weight: 1.0
-      kernel_window_percentage: 0.2
+      kernel_window_percentage: 0.000
       longest_valid_joint_move: 0.03
     - class: stomp_moveit/ObstacleDistanceGradient
-      max_distance: 0.2
-      cost_weight: 1.0
+      max_distance: 0.3
+      cost_weight: 0.6
       longest_valid_joint_move: 0.03
     noisy_filters:
     - class: stomp_moveit/JointLimits
