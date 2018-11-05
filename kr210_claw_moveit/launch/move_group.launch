@@ -68,7 +68,7 @@
 
         <!-- voxblox settings -->
 
-        <param name="voxblox/tsdf_voxel_size" value="0.10"/>
+        <param name="voxblox/tsdf_voxel_size" value="0.20"/>
         <param name="voxblox/tsdf_voxels_per_side" value="16"/>
         <param name="voxblox/voxel_carving_enabled" value="true"/>
         <param name="voxblox/color_mode" value="lambert"/>
